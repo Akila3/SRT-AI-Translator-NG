@@ -1,0 +1,7 @@
+# Every clone gets the bytes the repository holds, on every OS and whatever core.autocrlf says:
+# several gates hash files or read source text byte for byte.
+* text=auto eol=lf
+
+# The ALASS unit's licence files are pinned by SHA-256 in licenses/alass/2.0.0/UNIT-MANIFEST.json, and
+# rust-dependencies.txt keeps the CRLF lines of the crate licences it quotes. Never convert them.
+licenses/alass/** -text

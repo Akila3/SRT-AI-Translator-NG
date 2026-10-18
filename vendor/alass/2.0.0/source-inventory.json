@@ -1,0 +1,244 @@
+{
+  "component": "alass-cli",
+  "version": "2.0.0",
+  "upstream": {
+    "repository": "https://github.com/kaegi/alass",
+    "tag": "v2.0.0",
+    "archive": "alass-v2.0.0-source.zip",
+    "archiveSha256": "cf2a1472a290330e99aea7b82ed57e022ccb8a78705700bf7ac528999eecbc03",
+    "archiveRoot": "alass-2.0.0/"
+  },
+  "modification": {
+    "patch": "report-fork.patch",
+    "patchSha256": "62ed09bc5fd230b42c56907bf16a3691130947917a01e4a2cff364b78ea87f0b",
+    "files": [
+      "alass-cli/src/main.rs"
+    ]
+  },
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 90,
+      "sha256": "d0918791bb5d12477419a9ea10c4aa9c7ded628b3e350a959be542673ef95c1b",
+      "upstreamSha256": "d0918791bb5d12477419a9ea10c4aa9c7ded628b3e350a959be542673ef95c1b",
+      "modified": false
+    },
+    {
+      "path": "Cargo.lock",
+      "bytes": 35155,
+      "sha256": "ffd13a8055ea5129a93b5be039bb5d3f2f763e866a3eb7e64188d76b9321710a",
+      "upstreamSha256": "ffd13a8055ea5129a93b5be039bb5d3f2f763e866a3eb7e64188d76b9321710a",
+      "modified": false
+    },
+    {
+      "path": "Cargo.toml",
+      "bytes": 104,
+      "sha256": "ae5d5c9681f7936aec78a28c3c8b49c87ae1ebebb13ca92fc7a6c5dc876cfa44",
+      "upstreamSha256": "ae5d5c9681f7936aec78a28c3c8b49c87ae1ebebb13ca92fc7a6c5dc876cfa44",
+      "modified": false
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 35147,
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "upstreamSha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "modified": false
+    },
+    {
+      "path": "Makefile",
+      "bytes": 1394,
+      "sha256": "9dbe7ab9909f8edd6c3b2d1159295a6596238997b51d2812e869b30c8d6f5842",
+      "upstreamSha256": "9dbe7ab9909f8edd6c3b2d1159295a6596238997b51d2812e869b30c8d6f5842",
+      "modified": false
+    },
+    {
+      "path": "MakefileWindows64",
+      "bytes": 1437,
+      "sha256": "3ec81cc688d88f2dcb4f11a520f76e603b8a4c64f203c7d5b99a5713bb808506",
+      "upstreamSha256": "3ec81cc688d88f2dcb4f11a520f76e603b8a4c64f203c7d5b99a5713bb808506",
+      "modified": false
+    },
+    {
+      "path": "README.md",
+      "bytes": 5712,
+      "sha256": "29ffcbfeb8591dba562331e91372b3869494211d20b3e4fa3612b68472f5bbd1",
+      "upstreamSha256": "29ffcbfeb8591dba562331e91372b3869494211d20b3e4fa3612b68472f5bbd1",
+      "modified": false
+    },
+    {
+      "path": "alass-cli/Cargo.toml",
+      "bytes": 1176,
+      "sha256": "0aee1845b2ce4b7ef214a3e4ec12dd1c6113a69016c44eb9bb54a0188f444142",
+      "upstreamSha256": "0aee1845b2ce4b7ef214a3e4ec12dd1c6113a69016c44eb9bb54a0188f444142",
+      "modified": false
+    },
+    {
+      "path": "alass-cli/examples/generate_statistics_from_database.rs",
+      "bytes": 103323,
+      "sha256": "e05e06876a4f98d68407ce05c10b669008d4da090b2f89f0f0099141ed531fb9",
+      "upstreamSha256": "e05e06876a4f98d68407ce05c10b669008d4da090b2f89f0f0099141ed531fb9",
+      "modified": false
+    },
+    {
+      "path": "alass-cli/src/errors.rs",
+      "bytes": 7371,
+      "sha256": "4288f801f1c6d1bd3ab043a8fa468c88a1646d782d6627e3bb2e388df3f7e8eb",
+      "upstreamSha256": "4288f801f1c6d1bd3ab043a8fa468c88a1646d782d6627e3bb2e388df3f7e8eb",
+      "modified": false
+    },
+    {
+      "path": "alass-cli/src/lib.rs",
+      "bytes": 15012,
+      "sha256": "ffcbaa1d6974832323a15728bbc8f5046cad385fb701034281d3956f7ca019e4",
+      "upstreamSha256": "ffcbaa1d6974832323a15728bbc8f5046cad385fb701034281d3956f7ca019e4",
+      "modified": false
+    },
+    {
+      "path": "alass-cli/src/main.rs",
+      "bytes": 23638,
+      "sha256": "e4013caaeaf5d6cb934835d04015120f950c42c45800efc0ced67e737ea4c464",
+      "upstreamSha256": "79ccd61621e858ea6f729225416aa1e3e6c0b67ebb95156f3173e5c8eaad1e58",
+      "modified": true
+    },
+    {
+      "path": "alass-cli/src/video_decoder/ffmpeg_binary.rs",
+      "bytes": 15769,
+      "sha256": "498ffe47ed3274b81bb5e65a0bdc8e3140fd89186537fd5ea7ed44d7c6468c4f",
+      "upstreamSha256": "498ffe47ed3274b81bb5e65a0bdc8e3140fd89186537fd5ea7ed44d7c6468c4f",
+      "modified": false
+    },
+    {
+      "path": "alass-cli/src/video_decoder/ffmpeg_library.rs",
+      "bytes": 10756,
+      "sha256": "81c42147ba2fc8b459ff7335cc315e121950bfd818524ecf08b5659f1f7461cb",
+      "upstreamSha256": "81c42147ba2fc8b459ff7335cc315e121950bfd818524ecf08b5659f1f7461cb",
+      "modified": false
+    },
+    {
+      "path": "alass-cli/src/video_decoder/mod.rs",
+      "bytes": 2591,
+      "sha256": "5c0480896c2a486dc75b460d17c3fae7f32fc30a509c6e91333e491c81154de6",
+      "upstreamSha256": "5c0480896c2a486dc75b460d17c3fae7f32fc30a509c6e91333e491c81154de6",
+      "modified": false
+    },
+    {
+      "path": "alass-core/Cargo.toml",
+      "bytes": 728,
+      "sha256": "1825eea9ca4b5cde3f3fcf2bbf740c665db3608517a853a5a185d34f84ffe870",
+      "upstreamSha256": "1825eea9ca4b5cde3f3fcf2bbf740c665db3608517a853a5a185d34f84ffe870",
+      "modified": false
+    },
+    {
+      "path": "alass-core/README.md",
+      "bytes": 706,
+      "sha256": "f549b61ba5ff34ed141e3c3272df9467130ce36734c1e4fb6779375e5276c5da",
+      "upstreamSha256": "f549b61ba5ff34ed141e3c3272df9467130ce36734c1e4fb6779375e5276c5da",
+      "modified": false
+    },
+    {
+      "path": "alass-core/src/alass.rs",
+      "bytes": 27453,
+      "sha256": "fb0c361d38842f74856959746ce8d586af922129176d50f5d3a77666e2157f1a",
+      "upstreamSha256": "fb0c361d38842f74856959746ce8d586af922129176d50f5d3a77666e2157f1a",
+      "modified": false
+    },
+    {
+      "path": "alass-core/src/lib.rs",
+      "bytes": 9997,
+      "sha256": "afbc43d2c3caa0177357fa5db072ba9402c76b599e43d588ca1f133dfaf5df84",
+      "upstreamSha256": "afbc43d2c3caa0177357fa5db072ba9402c76b599e43d588ca1f133dfaf5df84",
+      "modified": false
+    },
+    {
+      "path": "alass-core/src/rating_type.rs",
+      "bytes": 6439,
+      "sha256": "0434d0d9d0b46f4a66c182aac23451f79afd44de428bd456bd7c806c99489344",
+      "upstreamSha256": "0434d0d9d0b46f4a66c182aac23451f79afd44de428bd456bd7c806c99489344",
+      "modified": false
+    },
+    {
+      "path": "alass-core/src/segments.rs",
+      "bytes": 64754,
+      "sha256": "26744778739fb45b42868c0e4317973d0e1dbaa7d44aed36c67d07a79cd6a471",
+      "upstreamSha256": "26744778739fb45b42868c0e4317973d0e1dbaa7d44aed36c67d07a79cd6a471",
+      "modified": false
+    },
+    {
+      "path": "alass-core/src/time_types.rs",
+      "bytes": 11200,
+      "sha256": "25168813636076dc77ab744ab83f117a49791db3996905c0c0a83fc53213bd57",
+      "upstreamSha256": "25168813636076dc77ab744ab83f117a49791db3996905c0c0a83fc53213bd57",
+      "modified": false
+    },
+    {
+      "path": "alass-core/src/timespan_ops.rs",
+      "bytes": 7485,
+      "sha256": "5db67025ab38a62c705384d12eadea3ab4b42b9ddcbda6ef062741f3177ae1a1",
+      "upstreamSha256": "5db67025ab38a62c705384d12eadea3ab4b42b9ddcbda6ef062741f3177ae1a1",
+      "modified": false
+    },
+    {
+      "path": "documentation/slides.pdf",
+      "bytes": 2925705,
+      "sha256": "c47040d27cc12a7b53eb35549c5c0fcf9cfd03dd6c8d8112194597cc0904b0c5",
+      "upstreamSha256": "c47040d27cc12a7b53eb35549c5c0fcf9cfd03dd6c8d8112194597cc0904b0c5",
+      "modified": false
+    },
+    {
+      "path": "documentation/thesis.pdf",
+      "bytes": 2034995,
+      "sha256": "0e35c5c6a5bcc3645ea4db80f59c06dddfaef88737b400f398df2b6b16be18bf",
+      "upstreamSha256": "0e35c5c6a5bcc3645ea4db80f59c06dddfaef88737b400f398df2b6b16be18bf",
+      "modified": false
+    },
+    {
+      "path": "rustfmt.toml",
+      "bytes": 39,
+      "sha256": "4b26ec1c6016d8e1e1d3296dc5a817ef446a99ea229f35b37bdc0a5c3ccaabc0",
+      "upstreamSha256": "4b26ec1c6016d8e1e1d3296dc5a817ef446a99ea229f35b37bdc0a5c3ccaabc0",
+      "modified": false
+    },
+    {
+      "path": "statistics-helpers/export_subtitle_from_database.py",
+      "bytes": 2969,
+      "sha256": "24f53d90bdc4a4b65d06f508e0fb17e59cfac6a98848cdf268cdb7b9941c8acc",
+      "upstreamSha256": "24f53d90bdc4a4b65d06f508e0fb17e59cfac6a98848cdf268cdb7b9941c8acc",
+      "modified": false
+    },
+    {
+      "path": "statistics-helpers/generate_database_from_videolist.py",
+      "bytes": 16889,
+      "sha256": "ea9d8be01af43fda96458713b0b13ea10b9ae8e1118158bc17d88d569c4801cb",
+      "upstreamSha256": "ea9d8be01af43fda96458713b0b13ea10b9ae8e1118158bc17d88d569c4801cb",
+      "modified": false
+    },
+    {
+      "path": "statistics-helpers/generate_plots_from_statistics.py",
+      "bytes": 21939,
+      "sha256": "a4c3385cb3f2cae3135a13ba6765ab31f01c73e86bed9bfd99691ac10cdd06bb",
+      "upstreamSha256": "a4c3385cb3f2cae3135a13ba6765ab31f01c73e86bed9bfd99691ac10cdd06bb",
+      "modified": false
+    },
+    {
+      "path": "statistics-helpers/list-all-subtitles.py",
+      "bytes": 705,
+      "sha256": "562d68b5ae93caf5dc4dae55fe54936ce5a83d4e6a812bb2b2f3f4be6546b226",
+      "upstreamSha256": "562d68b5ae93caf5dc4dae55fe54936ce5a83d4e6a812bb2b2f3f4be6546b226",
+      "modified": false
+    },
+    {
+      "path": "statistics-helpers/plots_from_videolist.sh",
+      "bytes": 2863,
+      "sha256": "cd9b8890eb9add85d7b7d2b1b8b0023d89d9e09b5b6810b3dd3c4ee7d97a6553",
+      "upstreamSha256": "cd9b8890eb9add85d7b7d2b1b8b0023d89d9e09b5b6810b3dd3c4ee7d97a6553",
+      "modified": false
+    },
+    {
+      "path": "statistics-helpers/worst_movies.py",
+      "bytes": 255,
+      "sha256": "65c4014924943c18c367553008b59087ee7b8ce5e170755b0fbee33aaf1c61ed",
+      "upstreamSha256": "65c4014924943c18c367553008b59087ee7b8ce5e170755b0fbee33aaf1c61ed",
+      "modified": false
+    }
+  ]
+}

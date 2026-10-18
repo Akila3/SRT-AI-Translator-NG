@@ -1,0 +1,59 @@
+node_modules/
+out/
+release/
+dist/
+resources/bin/
+
+# Local verification secrets. Never commit an API key: git history is permanent and a key
+# pushed once must be treated as burned even if the next commit removes it.
+.secrets/
+*.local.json
+.env
+.env.*
+
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+# Engineering process — private, never published (tester decision, 2026-10-17).
+#
+# The workflow and planning material stays on this machine and out of the repository: agent rules
+# and prompts, the planning documents, the fork's design notes and the research scripts. The one
+# document meant for developers is ARCHITECTURE.md, which stays tracked; README.md, CHANGELOG.md,
+# LICENSE, THIRD-PARTY-NOTICES.md, licenses/ and vendor/ are product files and stay tracked too.
+#
+# These files were tracked until 2026-10-17, so older local commits still hold them. They must be
+# removed from whatever history is published; see the release checklist kept with the plans.
+# Untracked means no git history: the round backup zips are their only copies.
+AGENTS.md
+SETUP.md
+docs/
+design/
+.cursor/
+# ─────────────────────────────────────────────────────────────────────────────────────────────
+
+# Third-party reference material: the gemini-srt-translator source and the Kodi addon whose
+# gender-oracle algorithm NG plans to port. Kept out of the repository because it is upstream
+# code that is re-downloadable, not ours to republish as though it were. It IS required reading
+# for the planner, so it stays on disk — see .cursor/plans/handoff.md §7.
+Source Codes/
+
+*.log
+*.tsbuildinfo
+__pycache__/
+.DS_Store
+.vite/
+
+# Probe scratch: generated media fixtures and the console logs of the runs made on them.
+# Large, regenerable, and never part of a build. Covered by a pattern rather than by name
+# because each probe makes its own, and they are normally deleted on success — so the one that
+# survives is the one whose probe crashed, which is exactly when nobody is thinking about
+# .gitignore.
+.tmp-*/
+
+# Private evaluation material. `.cursor/exports/` holds review packages built for the tester:
+# full copyrighted subtitle files, raw request/response dumps and private zips. The review
+# snippets are excerpts of the same material. Neither may enter history, which is permanent.
+# `.vscode/` is per-machine editor state. The `.diff` is a raw comparison of third-party add-on
+# source taken from `Source Codes/`, which is excluded for the reason given above it.
+.cursor/exports/
+.cursor/tools/_f15_review_snip*.txt
+.cursor/tools/f15_subsync_*.diff
+.vscode/

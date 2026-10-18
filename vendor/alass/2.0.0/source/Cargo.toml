@@ -1,0 +1,10 @@
+[workspace]
+
+members = [
+    "alass-core",
+    "alass-cli"
+]
+
+[profile.release]
+lto = true
+opt-level = 3

@@ -1,0 +1,3 @@
+# Corresponding Source must stay byte-identical to what built the shipped executable.
+# No end-of-line conversion on checkout or commit, whatever core.autocrlf says.
+* -text

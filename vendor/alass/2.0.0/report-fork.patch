@@ -1,0 +1,264 @@
+diff --git a/alass-cli/src/main.rs b/alass-cli/src/main.rs
+index 22060b2d49499e3b469b0bc96a6cc20e48c2cd75..76f152f8acb059af8166b7b24d68e196d909f67a 100644
+--- a/alass-cli/src/main.rs
++++ b/alass-cli/src/main.rs
+@@ -2,6 +2,10 @@
+ //
+ // Copyright (C) 2017 kaegi
+ //
++// MODIFIED 2026-09-18 for SRT AI Translation UI: adds the --json-report option, which writes a
++// machine-readable report after the output subtitle and changes nothing else. See MODIFICATIONS.md
++// and report-fork.patch beside this source tree.
++//
+ // This program is free software: you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation, either version 3 of the License, or
+@@ -22,6 +26,7 @@
+ extern crate clap;
+ extern crate encoding_rs;
+ extern crate pbr;
++extern crate serde_json;
+ extern crate subparse;
+ 
+ // Alg* stands for algorithm (the internal alass algorithm types)
+@@ -99,6 +104,7 @@ struct Arguments {
+     reference_file_path: PathBuf,
+     incorrect_file_path: PathBuf,
+     output_file_path: PathBuf,
++    json_report_path: Option<PathBuf>,
+ 
+     interval: i64,
+ 
+@@ -189,6 +195,12 @@ fn parse_args() -> Result<Arguments, InputArgumentsError> {
+             .long("disable-fps-guessing")
+             .alias("disable-framerate-guessing")
+         )
++        .arg(Arg::with_name("json-report")
++            .long("json-report")
++            .value_name("path")
++            .help("Writes a versioned machine-readable alignment report without changing the output subtitle.")
++            .takes_value(true)
++        )
+         .after_help("This program works with .srt, .ass/.ssa, .idx and .sub files. The corrected file will have the same format as the incorrect file.")
+         .get_matches();
+ 
+@@ -231,6 +243,7 @@ fn parse_args() -> Result<Arguments, InputArgumentsError> {
+         reference_file_path,
+         incorrect_file_path,
+         output_file_path,
++        json_report_path: matches.value_of("json-report").map(PathBuf::from),
+         interval,
+         split_penalty,
+         sub_fps_ref: unpack_clap_number_f64(&matches, "sub-fps-ref")?,
+@@ -288,6 +301,7 @@ fn run() -> Result<(), failure::Error> {
+             .enumerate()
+             .map(|(i, time_span)| (time_span, format!("line {}", i)))
+             .collect();
++        let vad_span_count = lines.len();
+ 
+         let debug_file =
+             subparse::SrtFile::create(lines).with_context(|_| TopLevelErrorKind::FailedToInstantiateSubtitleFile)?;
+@@ -296,6 +310,27 @@ fn run() -> Result<(), failure::Error> {
+             &args.output_file_path,
+             debug_file.to_data().unwrap(), // error handling
+         )?;
++        if let Some(ref report_path) = args.json_report_path {
++            let report = serde_json::json!({
++                "schema_version": 1,
++                "engine": {
++                    "name": PKG_NAME.unwrap_or("alass-cli"),
++                    "version": PKG_VERSION.unwrap_or("unknown"),
++                },
++                "mode": "vad_export",
++                "reference_span_count": vad_span_count,
++                "score": serde_json::Value::Null,
++                "fps": serde_json::Value::Null,
++                "shift_groups": [],
++                "warnings": [],
++                "candidate_only": true,
++            });
++            write_data_to_file(
++                report_path.as_path(),
++                serde_json::to_vec_pretty(&report)
++                    .with_context(|_| TopLevelErrorKind::FailedToGenerateSubtitleData)?,
++            )?;
++        }
+ 
+         return Ok(());
+     }
+@@ -326,6 +361,7 @@ fn run() -> Result<(), failure::Error> {
+         timings_to_alg_timespans(ref_file.timespans(), args.interval);
+ 
+     let mut fps_scaling_factor = 1.;
++    let mut fps_ratio_label = "1".to_string();
+     if args.guess_fps_ratio {
+         let a = 25.;
+         let b = 24.;
+@@ -341,10 +377,15 @@ fn run() -> Result<(), failure::Error> {
+         );
+ 
+         fps_scaling_factor = if let Some(idx) = opt_ratio_idx { ratios[idx] } else { 1. };
++        fps_ratio_label = if let Some(idx) = opt_ratio_idx {
++            desc[idx].to_string()
++        } else {
++            "1".to_string()
++        };
+ 
+         println!(
+             "info: 'reference file FPS/input file FPS' ratio is {}",
+-            if let Some(idx) = opt_ratio_idx { desc[idx] } else { "1" }
++            fps_ratio_label
+         );
+         println!();
+ 
+@@ -360,28 +401,30 @@ fn run() -> Result<(), failure::Error> {
+         args.reference_file_path.display()
+     );
+     let alg_deltas;
++    let alignment_score;
+     if args.no_split_mode {
+         let num_inc_timespancs = inc_aligner_timespans.len();
+ 
+-        let alg_delta = alass_core::align_nosplit(
++        let (alg_delta, score) = alass_core::align_nosplit(
+             &ref_aligner_timespans,
+             &inc_aligner_timespans,
+             alass_core::standard_scoring,
+             ProgressInfo::new(1, Some(align_start_msg)),
+-        )
+-        .0;
++        );
+ 
+         alg_deltas = std::vec::from_elem(alg_delta, num_inc_timespancs);
++        alignment_score = score;
+     } else {
+-        alg_deltas = align(
++        let (deltas, score) = align(
+             &ref_aligner_timespans,
+             &inc_aligner_timespans,
+             args.split_penalty,
+             args.speed_optimization,
+             alass_core::standard_scoring,
+             ProgressInfo::new(1, Some(align_start_msg)),
+-        )
+-        .0;
++        );
++        alg_deltas = deltas;
++        alignment_score = score;
+     }
+     let deltas = alg_deltas_to_timing_deltas(&alg_deltas, args.interval);
+ 
+@@ -394,7 +437,29 @@ fn run() -> Result<(), failure::Error> {
+             .collect(),
+     );
+ 
+-    for (shift_group_delta, shift_group_lines) in shift_groups {
++    let report_shift_groups: Vec<serde_json::Value> = shift_groups
++        .iter()
++        .map(|(shift_group_delta, shift_group_lines)| {
++            let min = shift_group_lines
++                .iter()
++                .map(|subline| subline.start)
++                .min()
++                .expect("a subtitle group should have at least one subtitle line");
++            let max = shift_group_lines
++                .iter()
++                .map(|subline| subline.start)
++                .max()
++                .expect("a subtitle group should have at least one subtitle line");
++            serde_json::json!({
++                "cue_count": shift_group_lines.len(),
++                "first_start_ms": min.msecs(),
++                "last_start_ms": max.msecs(),
++                "delta_ms": alg_delta_to_delta(*shift_group_delta, args.interval).msecs(),
++            })
++        })
++        .collect();
++
++    for (shift_group_delta, shift_group_lines) in &shift_groups {
+         // computes the first and last timestamp for all lines with that delta
+         // -> that way we can provide the user with an information like
+         //     "100 subtitles with 10min length"
+@@ -413,18 +478,21 @@ fn run() -> Result<(), failure::Error> {
+             "shifted block of {} subtitles with length {} by {}",
+             shift_group_lines.len(),
+             max - min,
+-            alg_delta_to_delta(shift_group_delta, args.interval)
++            alg_delta_to_delta(*shift_group_delta, args.interval)
+         );
+     }
+ 
+     println!();
+ 
++    let mut report_warnings: Vec<String> = Vec::new();
+     if ref_file.timespans().is_empty() {
+         println!("warn: reference file has no subtitle lines");
++        report_warnings.push("reference file has no subtitle lines".to_string());
+         println!();
+     }
+     if inc_file.timespans().is_empty() {
+         println!("warn: file with incorrect subtitles has no lines");
++        report_warnings.push("file with incorrect subtitles has no lines".to_string());
+         println!();
+     }
+ 
+@@ -444,6 +512,7 @@ fn run() -> Result<(), failure::Error> {
+ 
+     if corrected_timespans.iter().any(|ts| ts.start.is_negative()) {
+         println!("warn: some subtitles now have negative timings, which can cause invalid subtitle files");
++        report_warnings.push("some subtitles now have negative timings".to_string());
+         if args.allow_negative_timestamps {
+             println!(
+                 "warn: negative timestamps will be written to file, because you passed '-n' or '--allow-negative-timestamps'",
+@@ -468,8 +537,12 @@ fn run() -> Result<(), failure::Error> {
+     // produce errors
+     if output_file_format == SubtitleFormat::VobSubIdx {
+         println!("warn: writing to an '.idx' file can lead to unexpected results due to restrictions of this format");
++        report_warnings.push("writing VobSub IDX can lead to unexpected results".to_string());
+     }
+ 
++    let reference_cue_count = ref_file.timespans().len();
++    let input_cue_count = inc_file.timespans().len();
++
+     // incorrect file -> correct file
+     let shifted_timespans: Vec<SubtitleEntry> = corrected_timespans
+         .into_iter()
+@@ -489,6 +562,38 @@ fn run() -> Result<(), failure::Error> {
+             .with_context(|_| TopLevelErrorKind::FailedToGenerateSubtitleData)?,
+     )?;
+ 
++    if let Some(ref report_path) = args.json_report_path {
++        let report = serde_json::json!({
++            "schema_version": 1,
++            "engine": {
++                "name": PKG_NAME.unwrap_or("alass-cli"),
++                "version": PKG_VERSION.unwrap_or("unknown"),
++            },
++            "mode": if args.no_split_mode { "no_split" } else { "piecewise" },
++            "parameters": {
++                "interval_ms": args.interval,
++                "split_penalty": args.split_penalty,
++                "speed_optimization": args.speed_optimization,
++                "fps_guessing": args.guess_fps_ratio,
++            },
++            "fps": {
++                "ratio_label": fps_ratio_label,
++                "scaling_factor": fps_scaling_factor,
++            },
++            "score": alignment_score,
++            "reference_cue_count": reference_cue_count,
++            "input_cue_count": input_cue_count,
++            "shift_groups": report_shift_groups,
++            "warnings": report_warnings,
++            "candidate_only": true,
++        });
++        write_data_to_file(
++            report_path.as_path(),
++            serde_json::to_vec_pretty(&report)
++                .with_context(|_| TopLevelErrorKind::FailedToGenerateSubtitleData)?,
++        )?;
++    }
++
+     Ok(())
+ }
+ 

@@ -1,0 +1,801 @@
+{
+  "generatedBy": "node scripts/check-alass.mjs --write-inventory (cargo metadata --locked --offline --format-version 1)",
+  "cargoLockSha256": "ffd13a8055ea5129a93b5be039bb5d3f2f763e866a3eb7e64188d76b9321710a",
+  "linkedMeans": "reachable from alass-cli through normal (not dev, not build-script) dependency edges, for any target",
+  "packageCount": 88,
+  "linkedCount": 71,
+  "packages": [
+    {
+      "name": "aho-corasick",
+      "version": "0.6.10",
+      "license": "Unlicense/MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/BurntSushi/aho-corasick",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "alass-cli",
+      "version": "2.0.0",
+      "license": "GPL-3.0",
+      "licenseFile": null,
+      "repository": "https://github.com/kaegi/alass",
+      "source": null,
+      "linked": true
+    },
+    {
+      "name": "alass-core",
+      "version": "2.0.0",
+      "license": "GPL-3.0",
+      "licenseFile": null,
+      "repository": "https://github.com/kaegi/alass/alass-core",
+      "source": null,
+      "linked": true
+    },
+    {
+      "name": "ansi_term",
+      "version": "0.11.0",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": null,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "ascii",
+      "version": "0.7.1",
+      "license": "Apache-2.0 / MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/tomprogrammer/rust-ascii",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "atty",
+      "version": "0.2.13",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/softprops/atty",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "autocfg",
+      "version": "0.1.6",
+      "license": "Apache-2.0/MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/cuviper/autocfg",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "backtrace",
+      "version": "0.3.38",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-lang/backtrace-rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "backtrace-sys",
+      "version": "0.1.31",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/alexcrichton/backtrace-rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "bitflags",
+      "version": "1.2.0",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/bitflags/bitflags",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "byteorder",
+      "version": "1.3.2",
+      "license": "Unlicense OR MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/BurntSushi/byteorder",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "c2-chacha",
+      "version": "0.2.2",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/cryptocorrosion/cryptocorrosion",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "cast",
+      "version": "0.2.2",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/japaric/cast.rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "cc",
+      "version": "1.0.45",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/alexcrichton/cc-rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "cfg-if",
+      "version": "0.1.10",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/alexcrichton/cfg-if",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "clap",
+      "version": "2.33.0",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/clap-rs/clap",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "combine",
+      "version": "2.5.2",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/Marwes/combine",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "ctrlc",
+      "version": "3.1.3",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/Detegr/rust-ctrlc.git",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "either",
+      "version": "1.5.3",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/bluss/either",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "encoding_rs",
+      "version": "0.8.20",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/hsivonen/encoding_rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "enum_primitive",
+      "version": "0.1.1",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/andersk/enum_primitive-rs.git",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "error-chain",
+      "version": "0.10.0",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/brson/error-chain",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "failure",
+      "version": "0.1.5",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-lang-nursery/failure",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "failure_derive",
+      "version": "0.1.5",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/withoutboats/failure_derive",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "getrandom",
+      "version": "0.1.12",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-random/getrandom",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "image",
+      "version": "0.13.0",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/PistonDevelopers/image.git",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "itertools",
+      "version": "0.8.0",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/bluss/rust-itertools",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "itoa",
+      "version": "0.4.4",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/dtolnay/itoa",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "lazy_static",
+      "version": "0.2.11",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-lang-nursery/lazy-static.rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "lazy_static",
+      "version": "1.4.0",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-lang-nursery/lazy-static.rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "libc",
+      "version": "0.2.62",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-lang/libc",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "log",
+      "version": "0.3.9",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-lang/log",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "log",
+      "version": "0.4.8",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-lang/log",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "memchr",
+      "version": "2.2.1",
+      "license": "Unlicense/MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/BurntSushi/rust-memchr",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "nix",
+      "version": "0.14.1",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/nix-rust/nix",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "nom",
+      "version": "2.1.0",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/Geal/nom",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "num_cpus",
+      "version": "1.10.1",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/seanmonstar/num_cpus",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "num-integer",
+      "version": "0.1.41",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-num/num-integer",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "num-iter",
+      "version": "0.1.39",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-num/num-iter",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "num-rational",
+      "version": "0.1.42",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-num/num-rational",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "num-traits",
+      "version": "0.1.43",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-num/num-traits",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "num-traits",
+      "version": "0.2.8",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-num/num-traits",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "numtoa",
+      "version": "0.1.0",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://gitlab.com/mmstick/numtoa",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "pbr",
+      "version": "1.0.2",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/a8m/pb",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "ppv-lite86",
+      "version": "0.2.5",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/cryptocorrosion/cryptocorrosion",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "proc-macro2",
+      "version": "0.4.30",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/alexcrichton/proc-macro2",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "proc-macro2",
+      "version": "1.0.4",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/alexcrichton/proc-macro2",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "quote",
+      "version": "0.6.13",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/dtolnay/quote",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "quote",
+      "version": "1.0.2",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/dtolnay/quote",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "rand",
+      "version": "0.7.2",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-random/rand",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "rand_chacha",
+      "version": "0.2.1",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-random/rand",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "rand_core",
+      "version": "0.5.1",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-random/rand",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "rand_hc",
+      "version": "0.2.0",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-random/rand",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "redox_syscall",
+      "version": "0.1.56",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://gitlab.redox-os.org/redox-os/syscall",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "redox_termios",
+      "version": "0.1.1",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/redox-os/termios",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "regex",
+      "version": "0.2.11",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-lang/regex",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "regex-syntax",
+      "version": "0.5.6",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-lang/regex",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "rmp",
+      "version": "0.8.8",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/3Hren/msgpack-rust",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "rmp-serde",
+      "version": "0.14.0",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/3Hren/msgpack-rust",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "rustc-demangle",
+      "version": "0.1.16",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/alexcrichton/rustc-demangle",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "ryu",
+      "version": "1.0.0",
+      "license": "Apache-2.0 OR BSL-1.0",
+      "licenseFile": null,
+      "repository": "https://github.com/dtolnay/ryu",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "safemem",
+      "version": "0.2.0",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/abonander/safemem",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "serde",
+      "version": "1.0.101",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/serde-rs/serde",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "serde_derive",
+      "version": "1.0.101",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/serde-rs/serde",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "serde_json",
+      "version": "1.0.40",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/serde-rs/json",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "strsim",
+      "version": "0.8.0",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/dguo/strsim-rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "subparse",
+      "version": "0.6.2",
+      "license": "MPL-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/kaegi/subparse",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "syn",
+      "version": "0.15.44",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/dtolnay/syn",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "syn",
+      "version": "1.0.5",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/dtolnay/syn",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "synstructure",
+      "version": "0.10.2",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/mystor/synstructure",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "termion",
+      "version": "1.5.3",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://gitlab.redox-os.org/redox-os/termion",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "textwrap",
+      "version": "0.11.0",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/mgeisler/textwrap",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "thread_local",
+      "version": "0.3.6",
+      "license": "Apache-2.0/MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/Amanieu/thread_local-rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "threadpool",
+      "version": "1.7.1",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-threadpool/rust-threadpool",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "time",
+      "version": "0.1.42",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/rust-lang/time",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "ucd-util",
+      "version": "0.1.5",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/BurntSushi/ucd-generate",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "unicode-width",
+      "version": "0.1.6",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/unicode-rs/unicode-width",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "unicode-xid",
+      "version": "0.1.0",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/unicode-rs/unicode-xid",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "unicode-xid",
+      "version": "0.2.0",
+      "license": "MIT OR Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/unicode-rs/unicode-xid",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "utf8-ranges",
+      "version": "1.0.4",
+      "license": "Unlicense/MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/BurntSushi/utf8-ranges",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "vec_map",
+      "version": "0.8.1",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/contain-rs/vec-map",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "vobsub",
+      "version": "0.2.3",
+      "license": "CC0-1.0",
+      "licenseFile": null,
+      "repository": "https://github.com/emk/subtitles-rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "void",
+      "version": "1.0.2",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/reem/rust-void.git",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "wasi",
+      "version": "0.7.0",
+      "license": "Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/CraneStation/rust-wasi",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": false
+    },
+    {
+      "name": "webrtc-vad",
+      "version": "0.4.0",
+      "license": "MIT",
+      "licenseFile": null,
+      "repository": "https://github.com/kaegi/webrtc-vad",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "winapi",
+      "version": "0.3.8",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/retep998/winapi-rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "winapi-i686-pc-windows-gnu",
+      "version": "0.4.0",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/retep998/winapi-rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    },
+    {
+      "name": "winapi-x86_64-pc-windows-gnu",
+      "version": "0.4.0",
+      "license": "MIT/Apache-2.0",
+      "licenseFile": null,
+      "repository": "https://github.com/retep998/winapi-rs",
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "linked": true
+    }
+  ]
+}

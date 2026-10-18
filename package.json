@@ -1,0 +1,124 @@
+{
+  "name": "srt-ai-translation-ui-ng",
+  "version": "1.0.0",
+  "description": "SRT AI Translator NG (New Generation): portable desktop app for translating, transcribing and aligning subtitles with Google Gemini",
+  "main": "./out/main/index.js",
+  "author": "Akila3",
+  "license": "MIT",
+  "homepage": "https://github.com/Akila3/SRT-AI-Translator-NG#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akila3/SRT-AI-Translator-NG.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Akila3/SRT-AI-Translator-NG/issues"
+  },
+  "scripts": {
+    "dev": "electron-vite dev",
+    "start": "electron-vite preview",
+    "build": "electron-vite build",
+    "typecheck:node": "tsc --noEmit -p tsconfig.node.json --composite false",
+    "typecheck:web": "tsc --noEmit -p tsconfig.web.json --composite false",
+    "typecheck:scripts": "tsc --noEmit -p tsconfig.scripts.json",
+    "typecheck": "npm run typecheck:node && npm run typecheck:web && npm run typecheck:scripts",
+    "test:gates": "node scripts/gates/run.mjs",
+    "check:bin": "node scripts/check-bin.mjs",
+    "verify:live": "node scripts/verify/run.mjs",
+    "verify:consolelog": "node scripts/verify/run-consolelog.mjs",
+    "build:win": "node scripts/check-bin.mjs --target=win32 && electron-vite build && electron-builder --win",
+    "build:dir": "npm run check:bin && electron-vite build && electron-builder --dir"
+  },
+  "dependencies": {
+    "@google/genai": "2.27.0",
+    "electron-store": "^8.2.0",
+    "zustand": "^4.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.19",
+    "electron": "^31.3.1",
+    "electron-builder": "^24.13.3",
+    "electron-vite": "^2.3.0",
+    "postcss": "^8.4.39",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwindcss": "^3.4.7",
+    "typescript": "^5.5.4",
+    "vite": "^5.3.5"
+  },
+  "build": {
+    "appId": "com.srtai.translationui.ng",
+    "productName": "SRT AI Translator NG",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "out/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "resources/bin",
+        "to": "bin",
+        "filter": [
+          "ffmpeg*",
+          "ffprobe*"
+        ]
+      }
+    ],
+    "extraFiles": [
+      {
+        "from": "LICENSE",
+        "to": "LICENSE.txt"
+      },
+      {
+        "from": "THIRD-PARTY-NOTICES.md",
+        "to": "THIRD-PARTY-NOTICES.md"
+      },
+      {
+        "from": "licenses",
+        "to": "licenses"
+      }
+    ],
+    "beforePack": "./scripts/electron-builder-beforePack.cjs",
+    "afterPack": "./scripts/electron-builder-afterPack.cjs",
+    "afterAllArtifactBuild": "./scripts/electron-builder-afterAllArtifactBuild.cjs",
+    "asar": true,
+    "win": {
+      "target": [
+        "zip"
+      ],
+      "extraResources": [
+        {
+          "from": "resources/bin/alass/2.0.0",
+          "to": "bin/alass/2.0.0",
+          "filter": [
+            "alass.exe"
+          ]
+        },
+        {
+          "from": "vendor/alass/2.0.0",
+          "to": "bin/alass/2.0.0/corresponding-source",
+          "filter": [
+            "**/*",
+            "!.gitattributes"
+          ]
+        },
+        {
+          "from": "scripts/build-alass.ps1",
+          "to": "bin/alass/2.0.0/corresponding-source/build-alass.ps1"
+        }
+      ],
+      "signAndEditExecutable": false,
+      "artifactName": "${productName}-${version}-portable.${ext}"
+    },
+    "mac": {
+      "target": "zip"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}

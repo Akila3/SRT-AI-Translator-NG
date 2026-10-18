@@ -1,0 +1,25 @@
+{
+  "audio": {
+    "source": "Windows System.Speech, voice Microsoft David Desktop, 16 kHz 16-bit mono WAV, then ffmpeg 8.1.2 to mono 16 kHz 48 kbps MP3",
+    "durationSeconds": 29.715,
+    "mp3Sha256": "0ce45cc78b0ab59ff8aa8333d66c01ba9dfbffdff9b353cebb2e2f1a3e5e232e",
+    "script": [
+      "The lighthouse keeper climbed the stairs every evening at seven.",
+      "He counted one hundred and twelve steps, and never once lost count.",
+      "From the top, the harbour lights looked like a string of small yellow beads.",
+      "On clear nights he could see the ferry leaving for the island.",
+      "That is all for tonight."
+    ]
+  },
+  "sentenceStartsMs": {
+    "synthesis": [1600, 7605, 13885, 21415, 26175],
+    "silencedetect": [1619, 7646, 13901, 21422, 26187]
+  },
+  "speechSpansSeconds": [
+    [1.619, 4.707],
+    [7.646, 11.802],
+    [13.901, 18.029],
+    [21.422, 24.289],
+    [26.187, 27.431]
+  ]
+}

@@ -1,0 +1,254 @@
+{
+  "generatedBy": "node scripts/check-alass.mjs --write-manifest",
+  "component": "alass-cli",
+  "version": "2.0.0",
+  "means": "every file of the ALASS unit, by path relative to the unpacked application, with its SHA-256; nothing else may exist under resources/bin/alass or licenses/alass, except this file",
+  "fileCount": 49,
+  "files": [
+    {
+      "path": "licenses/alass/2.0.0/GPL-3.0.txt",
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "bytes": 35147
+    },
+    {
+      "path": "licenses/alass/2.0.0/README.txt",
+      "sha256": "e69af2f8a40639392b3cec725a569489b1ff508be0f67f8152034afc4af5b54e",
+      "bytes": 2712
+    },
+    {
+      "path": "licenses/alass/2.0.0/mingw-w64/COPYING.MinGW-w64-runtime.txt",
+      "sha256": "1db8da07b436c68833c0673ffee3d9fcb2526047f3820b81661865dfedc79a1f",
+      "bytes": 12155
+    },
+    {
+      "path": "licenses/alass/2.0.0/rust-dependencies.txt",
+      "sha256": "1b23e2eb63616cff36e80d03479d36e0c27d9b77c66aceac0f5730c289344db5",
+      "bytes": 610521
+    },
+    {
+      "path": "licenses/alass/2.0.0/rust-toolchain/COPYING.RUNTIME",
+      "sha256": "28e85c5aa4af9b4f1dfe6b4817aa3eefb3eaaee7fd735045016f29ccf50276a1",
+      "bytes": 3323
+    },
+    {
+      "path": "licenses/alass/2.0.0/rust-toolchain/COPYING3",
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "bytes": 35147
+    },
+    {
+      "path": "licenses/alass/2.0.0/rust-toolchain/COPYRIGHT-library.html",
+      "sha256": "68129500b616d5838629e68f55ff3aed5e096dacf60ce9eb41bbe599a563afa6",
+      "bytes": 1512520
+    },
+    {
+      "path": "licenses/alass/2.0.0/rust-toolchain/README.txt",
+      "sha256": "cdd0eaf36ec136a87f1b7fbae6d7b22c1488e2435c83fc1755f0f4f802e97c67",
+      "bytes": 635
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/alass.exe",
+      "sha256": "ea314c5c83ca4d30af5259cc658e696352492438015dd55dae47290699efe5aa",
+      "bytes": 1878645
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/MODIFICATIONS.md",
+      "sha256": "dffaa2ea634c2f7e9e11ab20559d575526c2491a24c42842331b77fec14b8a48",
+      "bytes": 1741
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/README.md",
+      "sha256": "0da32191ea7cc674aeadc5113a94b01701b00153c604c4f97bbdd576cbf941f8",
+      "bytes": 4700
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/build-alass.ps1",
+      "sha256": "2459cd105f8e18d172e4d796067d97b5c530bd622c9a2687b592e29c167a144c",
+      "bytes": 7991
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/build-receipt.json",
+      "sha256": "92db035d88cea4613a2d7ded2ef8e45662f1262edff2320a040522a1bd9e8e8c",
+      "bytes": 2031
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/dependency-inventory.json",
+      "sha256": "f6ee51f9b4613a550eb4085ef5967d9cc8fd23a21db9fe406fe49d4a994e5738",
+      "bytes": 25078
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/report-fork.patch",
+      "sha256": "62ed09bc5fd230b42c56907bf16a3691130947917a01e4a2cff364b78ea87f0b",
+      "bytes": 10474
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/report-schema-v1.json",
+      "sha256": "a877a13043ac476cb027cd77aa8e853d874b0712e6ef7fc1d16367a3d4a97e09",
+      "bytes": 3813
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source-inventory.json",
+      "sha256": "3938d635ea02fcbb92c6d11150795f2ba10d2fb109836e598a7dbc928c2b9280",
+      "bytes": 9463
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/.gitignore",
+      "sha256": "d0918791bb5d12477419a9ea10c4aa9c7ded628b3e350a959be542673ef95c1b",
+      "bytes": 90
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/Cargo.lock",
+      "sha256": "ffd13a8055ea5129a93b5be039bb5d3f2f763e866a3eb7e64188d76b9321710a",
+      "bytes": 35155
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/Cargo.toml",
+      "sha256": "ae5d5c9681f7936aec78a28c3c8b49c87ae1ebebb13ca92fc7a6c5dc876cfa44",
+      "bytes": 104
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/LICENSE",
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "bytes": 35147
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/Makefile",
+      "sha256": "9dbe7ab9909f8edd6c3b2d1159295a6596238997b51d2812e869b30c8d6f5842",
+      "bytes": 1394
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/MakefileWindows64",
+      "sha256": "3ec81cc688d88f2dcb4f11a520f76e603b8a4c64f203c7d5b99a5713bb808506",
+      "bytes": 1437
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/README.md",
+      "sha256": "29ffcbfeb8591dba562331e91372b3869494211d20b3e4fa3612b68472f5bbd1",
+      "bytes": 5712
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-cli/Cargo.toml",
+      "sha256": "0aee1845b2ce4b7ef214a3e4ec12dd1c6113a69016c44eb9bb54a0188f444142",
+      "bytes": 1176
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-cli/examples/generate_statistics_from_database.rs",
+      "sha256": "e05e06876a4f98d68407ce05c10b669008d4da090b2f89f0f0099141ed531fb9",
+      "bytes": 103323
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-cli/src/errors.rs",
+      "sha256": "4288f801f1c6d1bd3ab043a8fa468c88a1646d782d6627e3bb2e388df3f7e8eb",
+      "bytes": 7371
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-cli/src/lib.rs",
+      "sha256": "ffcbaa1d6974832323a15728bbc8f5046cad385fb701034281d3956f7ca019e4",
+      "bytes": 15012
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-cli/src/main.rs",
+      "sha256": "e4013caaeaf5d6cb934835d04015120f950c42c45800efc0ced67e737ea4c464",
+      "bytes": 23638
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-cli/src/video_decoder/ffmpeg_binary.rs",
+      "sha256": "498ffe47ed3274b81bb5e65a0bdc8e3140fd89186537fd5ea7ed44d7c6468c4f",
+      "bytes": 15769
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-cli/src/video_decoder/ffmpeg_library.rs",
+      "sha256": "81c42147ba2fc8b459ff7335cc315e121950bfd818524ecf08b5659f1f7461cb",
+      "bytes": 10756
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-cli/src/video_decoder/mod.rs",
+      "sha256": "5c0480896c2a486dc75b460d17c3fae7f32fc30a509c6e91333e491c81154de6",
+      "bytes": 2591
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-core/Cargo.toml",
+      "sha256": "1825eea9ca4b5cde3f3fcf2bbf740c665db3608517a853a5a185d34f84ffe870",
+      "bytes": 728
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-core/README.md",
+      "sha256": "f549b61ba5ff34ed141e3c3272df9467130ce36734c1e4fb6779375e5276c5da",
+      "bytes": 706
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-core/src/alass.rs",
+      "sha256": "fb0c361d38842f74856959746ce8d586af922129176d50f5d3a77666e2157f1a",
+      "bytes": 27453
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-core/src/lib.rs",
+      "sha256": "afbc43d2c3caa0177357fa5db072ba9402c76b599e43d588ca1f133dfaf5df84",
+      "bytes": 9997
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-core/src/rating_type.rs",
+      "sha256": "0434d0d9d0b46f4a66c182aac23451f79afd44de428bd456bd7c806c99489344",
+      "bytes": 6439
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-core/src/segments.rs",
+      "sha256": "26744778739fb45b42868c0e4317973d0e1dbaa7d44aed36c67d07a79cd6a471",
+      "bytes": 64754
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-core/src/time_types.rs",
+      "sha256": "25168813636076dc77ab744ab83f117a49791db3996905c0c0a83fc53213bd57",
+      "bytes": 11200
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/alass-core/src/timespan_ops.rs",
+      "sha256": "5db67025ab38a62c705384d12eadea3ab4b42b9ddcbda6ef062741f3177ae1a1",
+      "bytes": 7485
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/documentation/slides.pdf",
+      "sha256": "c47040d27cc12a7b53eb35549c5c0fcf9cfd03dd6c8d8112194597cc0904b0c5",
+      "bytes": 2925705
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/documentation/thesis.pdf",
+      "sha256": "0e35c5c6a5bcc3645ea4db80f59c06dddfaef88737b400f398df2b6b16be18bf",
+      "bytes": 2034995
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/rustfmt.toml",
+      "sha256": "4b26ec1c6016d8e1e1d3296dc5a817ef446a99ea229f35b37bdc0a5c3ccaabc0",
+      "bytes": 39
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/statistics-helpers/export_subtitle_from_database.py",
+      "sha256": "24f53d90bdc4a4b65d06f508e0fb17e59cfac6a98848cdf268cdb7b9941c8acc",
+      "bytes": 2969
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/statistics-helpers/generate_database_from_videolist.py",
+      "sha256": "ea9d8be01af43fda96458713b0b13ea10b9ae8e1118158bc17d88d569c4801cb",
+      "bytes": 16889
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/statistics-helpers/generate_plots_from_statistics.py",
+      "sha256": "a4c3385cb3f2cae3135a13ba6765ab31f01c73e86bed9bfd99691ac10cdd06bb",
+      "bytes": 21939
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/statistics-helpers/list-all-subtitles.py",
+      "sha256": "562d68b5ae93caf5dc4dae55fe54936ce5a83d4e6a812bb2b2f3f4be6546b226",
+      "bytes": 705
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/statistics-helpers/plots_from_videolist.sh",
+      "sha256": "cd9b8890eb9add85d7b7d2b1b8b0023d89d9e09b5b6810b3dd3c4ee7d97a6553",
+      "bytes": 2863
+    },
+    {
+      "path": "resources/bin/alass/2.0.0/corresponding-source/source/statistics-helpers/worst_movies.py",
+      "sha256": "65c4014924943c18c367553008b59087ee7b8ce5e170755b0fbee33aaf1c61ed",
+      "bytes": 255
+    }
+  ]
+}

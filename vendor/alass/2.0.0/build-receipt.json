@@ -1,0 +1,49 @@
+{
+  "component": "alass-cli",
+  "version": "2.0.0",
+  "target": "x86_64-pc-windows-gnu",
+  "toolchain": {
+    "rustupToolchain": "stable-x86_64-pc-windows-gnu",
+    "rustc": "rustc 1.98.1 (48a229cea 2026-09-01)",
+    "rustcCommitHash": "48a229ceaefd4985c50990b14116b6d856af0985",
+    "rustcHost": "x86_64-pc-windows-gnu",
+    "llvm": "22.1.8",
+    "cargo": "cargo 1.98.1 (797e8a9bc 2026-08-05)",
+    "gcc": "gcc.exe (MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r4) 16.1.0",
+    "recordedRustup": "rustup 1.29.1 (d95a37b6a 2026-08-13)"
+  },
+  "command": "cargo build --locked --release --manifest-path <source>/Cargo.toml",
+  "rustflags": [
+    "--remap-path-prefix=<CARGO_HOME>=/cargo",
+    "--remap-path-prefix=<source>=/alass",
+    "-Clink-arg=-Wl,--no-insert-timestamp"
+  ],
+  "rustflagsWhy": "Without them the executable embeds the builder's Windows user folder (registry source paths) and the link time, so it would leak a personal path and no second build could reproduce its hash.",
+  "inputs": {
+    "sourceInventorySha256": "3938d635ea02fcbb92c6d11150795f2ba10d2fb109836e598a7dbc928c2b9280",
+    "cargoLockSha256": "ffd13a8055ea5129a93b5be039bb5d3f2f763e866a3eb7e64188d76b9321710a"
+  },
+  "executable": {
+    "built": "release/alass-cli.exe",
+    "installedAs": "resources/bin/alass/2.0.0/alass.exe",
+    "sha256": "ea314c5c83ca4d30af5259cc658e696352492438015dd55dae47290699efe5aa",
+    "bytes": 1878645,
+    "versionLine": "alass-cli 2.0.0",
+    "imports": [
+      "KERNEL32.dll",
+      "api-ms-win-core-synch-l1-2-0.dll",
+      "api-ms-win-crt-convert-l1-1-0.dll",
+      "api-ms-win-crt-environment-l1-1-0.dll",
+      "api-ms-win-crt-heap-l1-1-0.dll",
+      "api-ms-win-crt-locale-l1-1-0.dll",
+      "api-ms-win-crt-math-l1-1-0.dll",
+      "api-ms-win-crt-private-l1-1-0.dll",
+      "api-ms-win-crt-runtime-l1-1-0.dll",
+      "api-ms-win-crt-stdio-l1-1-0.dll",
+      "api-ms-win-crt-string-l1-1-0.dll",
+      "api-ms-win-crt-utility-l1-1-0.dll",
+      "bcryptprimitives.dll",
+      "ntdll.dll"
+    ]
+  }
+}

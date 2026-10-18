@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "alass-cli-2.0.0-json-report-v1",
+  "title": "alass-cli --json-report, schema version 1",
+  "description": "Written by the report fork (report-fork.patch) after the output subtitle. Candidate evidence only: it never carries a verdict, and it never changes the output subtitle bytes.",
+  "oneOf": [
+    {
+      "title": "alignment (no_split or piecewise)",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_only", "engine", "fps", "input_cue_count", "mode", "parameters", "reference_cue_count", "schema_version", "score", "shift_groups", "warnings"],
+      "properties": {
+        "schema_version": { "const": 1 },
+        "candidate_only": { "const": true },
+        "engine": { "$ref": "#/$defs/engine" },
+        "mode": { "enum": ["no_split", "piecewise"] },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["fps_guessing", "interval_ms", "speed_optimization", "split_penalty"],
+          "properties": {
+            "fps_guessing": { "type": "boolean" },
+            "interval_ms": { "type": "integer", "minimum": 1 },
+            "speed_optimization": { "type": ["number", "null"] },
+            "split_penalty": { "type": "number" }
+          }
+        },
+        "fps": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ratio_label", "scaling_factor"],
+          "properties": {
+            "ratio_label": { "enum": ["1", "25/24", "25/23.976", "24/25", "24/23.976", "23.976/25", "23.976/24"] },
+            "scaling_factor": { "type": "number", "exclusiveMinimum": 0 }
+          }
+        },
+        "score": { "type": ["number", "null"] },
+        "reference_cue_count": { "type": "integer", "minimum": 0 },
+        "input_cue_count": { "type": "integer", "minimum": 0 },
+        "shift_groups": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["cue_count", "delta_ms", "first_start_ms", "last_start_ms"],
+            "properties": {
+              "cue_count": { "type": "integer", "minimum": 1 },
+              "delta_ms": { "type": "integer" },
+              "first_start_ms": { "type": "integer" },
+              "last_start_ms": { "type": "integer" }
+            }
+          }
+        },
+        "warnings": { "$ref": "#/$defs/warnings" }
+      }
+    },
+    {
+      "title": "voice-activity export (reference media only)",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["candidate_only", "engine", "fps", "mode", "reference_span_count", "schema_version", "score", "shift_groups", "warnings"],
+      "properties": {
+        "schema_version": { "const": 1 },
+        "candidate_only": { "const": true },
+        "engine": { "$ref": "#/$defs/engine" },
+        "mode": { "const": "vad_export" },
+        "reference_span_count": { "type": "integer", "minimum": 0 },
+        "score": { "type": "null" },
+        "fps": { "type": "null" },
+        "shift_groups": { "type": "array", "maxItems": 0 },
+        "warnings": { "type": "array", "maxItems": 0 }
+      }
+    }
+  ],
+  "$defs": {
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "alass-cli" },
+        "version": { "const": "2.0.0" }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "reference file has no subtitle lines",
+          "file with incorrect subtitles has no lines",
+          "some subtitles now have negative timings",
+          "writing VobSub IDX can lead to unexpected results"
+        ]
+      }
+    }
+  }
+}

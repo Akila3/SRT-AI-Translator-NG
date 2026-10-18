@@ -1,0 +1,288 @@
+{
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "The lighthouse keeper climbed the stairs every evening at seven. He counted 112 steps and never once lost count. From the top, the harbor lights looked like a string of small yellow beads. On clear nights, he could see the ferry leaving for the island. That is all for tonight.",
+            "audioTranscription": {
+              "text": "The lighthouse keeper climbed the stairs every evening at seven. He counted 112 steps and never once lost count. From the top, the harbor lights looked like a string of small yellow beads. On clear nights, he could see the ferry leaving for the island. That is all for tonight.",
+              "words": [
+                {
+                  "word": "The",
+                  "startOffset": "1.600s",
+                  "endOffset": "1.800s"
+                },
+                {
+                  "word": "lighthouse",
+                  "startOffset": "1.800s",
+                  "endOffset": "2.200s"
+                },
+                {
+                  "word": "keeper",
+                  "startOffset": "2.200s",
+                  "endOffset": "2.600s"
+                },
+                {
+                  "word": "climbed",
+                  "startOffset": "2.600s",
+                  "endOffset": "3s"
+                },
+                {
+                  "word": "the",
+                  "startOffset": "3s",
+                  "endOffset": "3s"
+                },
+                {
+                  "word": "stairs",
+                  "startOffset": "3s",
+                  "endOffset": "3.400s"
+                },
+                {
+                  "word": "every",
+                  "startOffset": "3.400s",
+                  "endOffset": "3.800s"
+                },
+                {
+                  "word": "evening",
+                  "startOffset": "3.800s",
+                  "endOffset": "4.100s"
+                },
+                {
+                  "word": "at",
+                  "startOffset": "4.100s",
+                  "endOffset": "4.300s"
+                },
+                {
+                  "word": "seven.",
+                  "startOffset": "4.300s",
+                  "endOffset": "4.600s"
+                },
+                {
+                  "word": "He",
+                  "startOffset": "7.600s",
+                  "endOffset": "7.700s"
+                },
+                {
+                  "word": "counted",
+                  "startOffset": "7.700s",
+                  "endOffset": "8.200s"
+                },
+                {
+                  "word": "112",
+                  "startOffset": "8.200s",
+                  "endOffset": "9.400s"
+                },
+                {
+                  "word": "steps",
+                  "startOffset": "9.400s",
+                  "endOffset": "9.900s"
+                },
+                {
+                  "word": "and",
+                  "startOffset": "10.300s",
+                  "endOffset": "10.500s"
+                },
+                {
+                  "word": "never",
+                  "startOffset": "10.500s",
+                  "endOffset": "10.800s"
+                },
+                {
+                  "word": "once",
+                  "startOffset": "10.800s",
+                  "endOffset": "11s"
+                },
+                {
+                  "word": "lost",
+                  "startOffset": "11s",
+                  "endOffset": "11.400s"
+                },
+                {
+                  "word": "count.",
+                  "startOffset": "11.400s",
+                  "endOffset": "11.800s"
+                },
+                {
+                  "word": "From",
+                  "startOffset": "13.900s",
+                  "endOffset": "14.100s"
+                },
+                {
+                  "word": "the",
+                  "startOffset": "14.100s",
+                  "endOffset": "14.200s"
+                },
+                {
+                  "word": "top,",
+                  "startOffset": "14.200s",
+                  "endOffset": "14.700s"
+                },
+                {
+                  "word": "the",
+                  "startOffset": "15s",
+                  "endOffset": "15.100s"
+                },
+                {
+                  "word": "harbor",
+                  "startOffset": "15.100s",
+                  "endOffset": "15.500s"
+                },
+                {
+                  "word": "lights",
+                  "startOffset": "15.500s",
+                  "endOffset": "15.800s"
+                },
+                {
+                  "word": "looked",
+                  "startOffset": "15.800s",
+                  "endOffset": "16.100s"
+                },
+                {
+                  "word": "like",
+                  "startOffset": "16.100s",
+                  "endOffset": "16.300s"
+                },
+                {
+                  "word": "a",
+                  "startOffset": "16.300s",
+                  "endOffset": "16.400s"
+                },
+                {
+                  "word": "string",
+                  "startOffset": "16.400s",
+                  "endOffset": "16.700s"
+                },
+                {
+                  "word": "of",
+                  "startOffset": "16.700s",
+                  "endOffset": "16.800s"
+                },
+                {
+                  "word": "small",
+                  "startOffset": "16.800s",
+                  "endOffset": "17.200s"
+                },
+                {
+                  "word": "yellow",
+                  "startOffset": "17.200s",
+                  "endOffset": "17.600s"
+                },
+                {
+                  "word": "beads.",
+                  "startOffset": "17.600s",
+                  "endOffset": "18s"
+                },
+                {
+                  "word": "On",
+                  "startOffset": "21.400s",
+                  "endOffset": "21.600s"
+                },
+                {
+                  "word": "clear",
+                  "startOffset": "21.600s",
+                  "endOffset": "21.900s"
+                },
+                {
+                  "word": "nights,",
+                  "startOffset": "21.900s",
+                  "endOffset": "22.200s"
+                },
+                {
+                  "word": "he",
+                  "startOffset": "22.200s",
+                  "endOffset": "22.300s"
+                },
+                {
+                  "word": "could",
+                  "startOffset": "22.300s",
+                  "endOffset": "22.500s"
+                },
+                {
+                  "word": "see",
+                  "startOffset": "22.500s",
+                  "endOffset": "22.700s"
+                },
+                {
+                  "word": "the",
+                  "startOffset": "22.700s",
+                  "endOffset": "22.800s"
+                },
+                {
+                  "word": "ferry",
+                  "startOffset": "22.800s",
+                  "endOffset": "23.200s"
+                },
+                {
+                  "word": "leaving",
+                  "startOffset": "23.200s",
+                  "endOffset": "23.600s"
+                },
+                {
+                  "word": "for",
+                  "startOffset": "23.600s",
+                  "endOffset": "23.700s"
+                },
+                {
+                  "word": "the",
+                  "startOffset": "23.700s",
+                  "endOffset": "23.900s"
+                },
+                {
+                  "word": "island.",
+                  "startOffset": "23.900s",
+                  "endOffset": "24.300s"
+                },
+                {
+                  "word": "That",
+                  "startOffset": "26.200s",
+                  "endOffset": "26.400s"
+                },
+                {
+                  "word": "is",
+                  "startOffset": "26.400s",
+                  "endOffset": "26.600s"
+                },
+                {
+                  "word": "all",
+                  "startOffset": "26.600s",
+                  "endOffset": "26.800s"
+                },
+                {
+                  "word": "for",
+                  "startOffset": "26.800s",
+                  "endOffset": "27s"
+                },
+                {
+                  "word": "tonight.",
+                  "startOffset": "27s",
+                  "endOffset": "27.400s"
+                }
+              ]
+            }
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 744,
+    "totalTokenCount": 744,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 1
+      },
+      {
+        "modality": "AUDIO",
+        "tokenCount": 743
+      }
+    ],
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-transcribe",
+  "responseId": "finEauGaD97qvdIPzs6BoAk"
+}

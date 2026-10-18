@@ -1,0 +1,85 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: #ffffff;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+}
+html.dark body {
+  background: #0f172a;
+  color: #e5e7eb;
+}
+
+html.dark .thin-scroll::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+/* Thin custom scrollbar for log panels */
+.thin-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+}
+.thin-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/*
+ * Log rows: skip layout and paint for lines scrolled out of view.
+ *
+ * The panel is about ten lines tall but can hold thousands, and every arriving line
+ * re-renders it and then reads scrollHeight to auto-scroll, which forces a full layout.
+ * content-visibility lets the browser skip that work for off-screen rows, so the cost
+ * tracks what is visible rather than what is retained. Rows wrap to variable heights, so
+ * index-based windowing would need measurement; this needs none, and scroll-back through
+ * the whole log keeps working. contain-intrinsic-size remembers each row's last measured
+ * height, which keeps the scrollbar from jumping as rows are skipped.
+ */
+.log-row {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 16px;
+}
+
+/*
+ * The indeterminate progress bar: a segment sweeping the track.
+ *
+ * It carries one meaning only — "this is still alive" — for the ffmpeg work that reports
+ * nothing until it exits. Transform-only, so it animates on the compositor and costs
+ * nothing during a run that is already re-rendering a log panel.
+ */
+@keyframes progress-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(400%);
+  }
+}
+.progress-sweep {
+  animation: progress-sweep 1.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .progress-sweep {
+    animation-duration: 3s;
+  }
+}

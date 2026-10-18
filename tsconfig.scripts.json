@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "noEmit": true
+  },
+  "include": [
+    "scripts/**/*.ts",
+    "electron/preload/index.d.ts"
+  ]
+}
