@@ -86,7 +86,7 @@ separate products, so they can be installed and run side by side.
 - A log beside every output, written as the run happens, so a failed run can still be diagnosed. API
   keys never appear in it.
 
-![Dark theme](assets/screenshots/translate-dark.png)
+![Light theme](assets/screenshots/translate-light.png)
 
 ## Install
 
