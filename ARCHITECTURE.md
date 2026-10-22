@@ -2,7 +2,8 @@
 
 A map of how this app is put together, for anyone who wants to change it: the entry points, how a
 run moves through the code, which module owns what, the files a run leaves behind, and the hazards
-that have bitten before.
+that have bitten before. For why each feature behaves as it does, and the tests behind those
+decisions, see [`decisions/`](decisions/README.md).
 
 ## What it is
 
@@ -565,6 +566,11 @@ measurement or the defect behind a rule. It is not a link you are expected to fo
 the check suite are the authority for what the app does**, and every rule that matters has a gate in
 `scripts/gates/gates.ts` that names it in plain words. When a comment and the code disagree, the code
 is right and the comment is the bug.
+
+**Why a rule is the way it is.** [`decisions/`](decisions/README.md) holds one public record per
+feature: what was tested, how many times, the results and their analysis, and why each behaviour is
+on, off or rejected. Each record ends with a label index, so a label found in a comment can often be
+looked up there. Those records explain decisions; they do not override the code.
 
 ## Hazards
 
