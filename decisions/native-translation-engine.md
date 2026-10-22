@@ -1,8 +1,8 @@
 # Native translation engine: batches, the reply check, commits and defaults
 
 **Decision in one paragraph.** NG translates with its own TypeScript engine instead of the Python
-command-line translator 1.1.0 ran. It sends the same prompt, in batches of up to 100 lines (and under
-300 seconds of audio when translating with media), with 1.1.0's generation defaults. It is stricter
+command-line translator SRT AI Translator 1.1.0 ran. It sends the same prompt, in batches of up to 100 lines (and under
+300 seconds of audio when translating with media), with SRT AI Translator 1.1.0's generation defaults. It is stricter
 than the old engine in three places: a reply must return **exactly** the requested lines, broken JSON
 is refused rather than repaired, and a batch is committed whole or not at all. Before the old engine
 was removed, the two were run side by side on 11 episodes, and the native engine matched it on
@@ -16,11 +16,33 @@ replaced. Section 3 is the timeline. Section 4 covers the build-time checks, sec
 comparison, section 6 what it found, section 7 the decisions and why, and sections 8 to 11 the limits,
 recommendations, code map and label index.
 
-Two names recur. **1.1.0** is *SRT AI Translation UI* 1.1.0, the earlier desktop app. **gst** is the
-engine it ran, *gemini-srt-translator* 3.7.0. "Parity" means kept because 1.1.0 did it and nothing
+Two names recur. **SRT AI Translator 1.1.0** is the earlier desktop app this product was built from
+(a separate product, not a version of NG). **gst** is the engine it ran, *gemini-srt-translator* 3.7.0. "Parity" means kept because SRT AI Translator 1.1.0 did it and nothing
 measured a better choice.
 
 ---
+
+## Models used in testing
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| Eleven-episode comparison, native vs gst (5, 6.1) | `gemini-3.5-flash-lite` | Low | The app's stored defaults: batch 100, context off, sampling off, Standard tier | Free | 34 runs (native, gst, gst repeat) over 7,760 lines per arm | Oct 6 |
+| Blind quality review of that comparison (5.5) | Human reviewer, no model | — | Sides hidden; mapping fixed before review | — | 176 lines in 22 stretches | Oct 6 |
+| Build-time checks (4) | No live model; fixtures only | — | Prompt compared with gst's over 32 combinations, including thinking on and off and thinking-capable models | — | 213 checks | During the build |
+
+**Would a different model change the results?** The **structural** results are model-independent:
+- the same line count and timings in and out;
+- the same prompt text and request shape as gst;
+- whole-batch commits and the exact reply check.
+
+These are properties of the code. The **behavioural** results are specific to `gemini-3.5-flash-lite`
+at Low:
+- the wrong-alphabet slip counts in section 6.2;
+- how often a reply came back unreadable or with a duplicated line (section 6.1);
+- the roughly 53% line agreement, which matched gst's own run-to-run variation;
+- the blind review.
+
+Another model may slip, duplicate or agree at different rates. Nothing was measured on a second model.
 
 ## 1. What the app does today
 
@@ -28,11 +50,11 @@ measured a better choice.
 
 | Setting | Default | Origin |
 |---|---|---|
-| Batch Size | 100 lines | 1.1.0 |
+| Batch Size | 100 lines | SRT AI Translator 1.1.0 |
 | Audio per batch (Translate with media) | under 300 seconds | gst `audio_chunk_size` |
-| Thinking level / budget | Low / 512 | 1.1.0 |
-| Custom generation parameters | OFF (temperature 1.0, top-P 0.95, top-K unset; not sent while OFF) | 1.1.0 |
-| Service tier | Standard | 1.1.0 |
+| Thinking level / budget | Low / 512 | SRT AI Translator 1.1.0 |
+| Custom generation parameters | OFF (temperature 1.0, top-P 0.95, top-K unset; not sent while OFF) | SRT AI Translator 1.1.0 |
+| Service tier | Standard | SRT AI Translator 1.1.0 |
 
 They live in `electron/main/store.ts` (`defaults`). Cross-Batch Context, Continue and the
 free-tier settings have their own records.
@@ -83,7 +105,7 @@ from a reply; every line keeps its source timing. The raw list is checked **befo
 
 ### 1.6 Responsiveness while preparing
 
-1.1.0 ran the engine as a packaged Python subprocess, and a verification run (the "buffering" control)
+SRT AI Translator 1.1.0 ran the engine as a packaged Python subprocess, and a verification run (the "buffering" control)
 proved that its progress lines reached the app while it worked rather than in one burst at the end.
 That control went with the subprocess, but the requirement it guarded (progress you can see, and a
 Stop that works before any request is sent) remains. The same verification run now checks the native
@@ -221,7 +243,7 @@ kept (batch 1 translated, the rest in English, every timing correct). A second r
 
 The old engine resent a batch in **3 of 22** runs (`Expected 100 lines, got 99.` twice, `got 79.`
 once), and one resend fixed each. **4 bad replies in 34 runs**: about one native run in eight would
-have stopped where 1.1.0 finished. That is a regression even though no check failed, so the maintainer
+have stopped where SRT AI Translator 1.1.0 finished. That is a regression even though no check failed, so the maintainer
 had a gst-identical resend added before the old engine was removed. The design is in
 [`content-block-recovery.md`](content-block-recovery.md) section 9.
 
@@ -241,7 +263,7 @@ either old-engine run, and more of the other two categories than either. With on
 old-engine runs, this does **not** show the engines are equivalent, and it does not isolate an engine
 effect in either direction. (An earlier reading took these numbers as "native inside the old
 engine's run-to-run spread on every row". That is wrong: native is outside the two old-engine values
-on every row.) 1.1.0 did not detect the slip at all: its output scan has no script check. It became a
+on every row.) SRT AI Translator 1.1.0 did not detect the slip at all: its output scan has no script check. It became a
 separate feature, a wrong-alphabet repair for Hebrew output
 ([`wrong-alphabet-repair.md`](wrong-alphabet-repair.md)).
 
@@ -251,13 +273,13 @@ separate feature, a wrong-alphabet repair for Hebrew output
 
 | Decision | Why | What would change it |
 |---|---|---|
-| Batch Size 100 | 1.1.0's default. No size was measured better. It is also the size at which two Cross-Batch Context failures appeared that smaller sizes hid ([`cross-batch-context.md`](cross-batch-context.md) section 11) | A measured reliability or quality difference at another size, for the default model |
+| Batch Size 100 | SRT AI Translator 1.1.0's default. No size was measured better. It is also the size at which two Cross-Batch Context failures appeared that smaller sizes hid ([`cross-batch-context.md`](cross-batch-context.md) section 11) | A measured reliability or quality difference at another size, for the default model |
 | Audio under 300 s, with no exceptions | gst's cap. gst let an overrunning line stay in some batches; NG applies the cap to every batch and sends an overlong line alone. Line text, count and order are unaffected; only where an audio batch ends differs | Evidence that longer audio per request improves results without loss |
 | Exact reply check | Section 2: membership alone let duplicates and gaps through. In every unexpected reply seen while building later features (collapsed replies, echoed context, invented lines), this check refused it before anything was written | Only a different output contract |
 | Check the raw list before storing | A map keyed by line number erases duplicates, so `[1, 2, 2, 4]` would look complete | — |
 | Strict JSON, no repair | A repaired reply is text the model did not send. The response schema makes valid JSON the normal case; a bad reply is resent, not guessed at | Evidence of a repair that can be checked against the request |
 | Whole-batch commit, destination last | At any instant the disk holds a consistent partial or the finished file. gst wrote line by line | — |
-| Generation defaults from 1.1.0 | Parity. Nothing measured a better default; the Cross-Batch Context studies ran at Low thinking | A measured difference on the default model |
+| Generation defaults from SRT AI Translator 1.1.0 | Parity. Nothing measured a better default; the Cross-Batch Context studies ran at Low thinking | A measured difference on the default model |
 
 ---
 

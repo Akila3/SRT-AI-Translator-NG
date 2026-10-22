@@ -30,14 +30,44 @@ not re-measured for the record, the record says so.
 | [`logging-and-run-artifacts.md`](logging-and-run-artifacts.md) | The run console, machine event log, progress log, thoughts log and token report: why each is separate |
 | [`submaker-evaluation.md`](submaker-evaluation.md) | The evaluation of an open-source Stremio subtitle add-on and what NG adopted from it, and what it did not |
 
+## Names used in these records
+
+- **SRT AI Translator NG** (or just "NG") is this product. Its first release is 1.0.0.
+- **SRT AI Translator 1.1.0** is the earlier desktop app NG was built from. It is a separate product
+  with its own version numbers, **not** a version of NG. Every mention of "1.1.0" in these records
+  means that app.
+- **gst** is *gemini-srt-translator*, the open-source command-line engine SRT AI Translator 1.1.0 ran
+  (version 3.7.0). Version 3.8.3 is the later upstream release some ideas were ported from. NG no
+  longer runs gst; its engine is native.
+
+## Models used in testing
+
+Every record has a **"Models used in testing"** section near the top. It lists each test that called a
+Gemini model: the exact model id, the thinking level, the key tier (Free or Paid), the size of the test
+and the date. Where a judge or reviewer model scored output, that is listed separately.
+
+- **Thinking level** is the Gemini 3.x `thinkingLevel` setting (minimal, low, medium, high). Gemini
+  2.5-series models use a token budget instead. "Not sent" means the request carried no thinking
+  setting, so the model used its own default.
+- **Most quality tests used one operating point:** `gemini-3.5-flash-lite` at thinking Low (the app's
+  translation default), translating English to Hebrew. Transcription tests mostly used
+  `gemini-3.7-flash` at Low and the dedicated `gemini-3.5-transcribe`.
+- **Results that depend on model behaviour may differ on another model or thinking level.** Examples:
+  how well a model follows a gender reference, how it uses context lines, how often it slips into the
+  wrong alphabet, what it refuses, and how it polishes a transcript. Each record says which of its
+  conclusions are model-dependent and which are pure code mechanics that no model choice changes.
+  Where nobody measured another model, the record says so; read that as "unknown", not as "the same".
+
 ## How an entry is laid out
 
 Each file follows the same order:
 
 - **The decision in one paragraph**, its status (`current`, or `superseded` with a pointer), and the
   scope of the evidence.
+- **Models used in testing**: which model, version and thinking level each test ran on, and which
+  conclusions would need re-measuring on a different model.
 - **What the app does today**, read from the code.
-- **What 1.1.0 did**: the baseline every change is measured against.
+- **What SRT AI Translator 1.1.0 did**: the baseline every change is measured against.
 - **A timeline** of when each thing was tested or decided.
 - **The tests**: setup, how many runs, results tables, the analysis, and the conclusion of each.
 - **The decisions**: each rule, why it was chosen, the alternatives rejected, and what evidence would

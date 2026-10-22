@@ -19,7 +19,7 @@ pairs (**49** titles) plus **1 155 × 2** mode threshold sweep; Kodi oracle pari
 review (Feature 16 research, not shipped as engines). Live packaged Align behaviour was exercised in
 release gates; no maintainer report of a full feature-length Align Apply run is recorded here.
 
-**How to read this file.** Section 1 is what the code does today. Section 2 is 1.1.0. Section 3 is the
+**How to read this file.** Section 1 is what the code does today. Section 2 is SRT AI Translator 1.1.0. Section 3 is the
 timeline. Sections 4–12 are measurements and design reviews in order. Section 13 states the decisions.
 Section 14 separates gate-proven behaviour from live-only claims. Sections 15–17 are limits,
 recommendations and the code map. Section 18 indexes comment labels.
@@ -27,6 +27,30 @@ recommendations and the code map. Section 18 indexes comment labels.
 Related records: [`gender-reference.md`](gender-reference.md) (oracle use of alignment), [`transcription.md`](transcription.md) (fallback after audio refusal).
 
 ---
+
+## Models used in testing
+
+Alignment itself calls **no model**: the checker, ALASS, the audio detector and every threshold study
+work on timings and text locally. Models enter only where a test used a **transcript as the
+reference**, because a model wrote that transcript.
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| ALASS evaluation, threshold capture, oracle parity, detector A/B (4 to 7) | None | — | Local tools on subtitle and audio files | — | See each section | Sep |
+| Japanese transcript samples (8) | `gemini-3.7-flash`, through SRT AI Translator 1.1.0's Transcribe | Medium | gst 3.7.0 transcription (whole-second times) | Not recorded | 3 episode transcripts | Before NG |
+| Release-pair corpus and threshold study (9.1 to 9.4) | None | — | 138 pairs of human-made subtitle releases | — | 1,155 cases × 2 modes | Oct |
+| Repair counts on real transcripts (9.5) | All three made by SRT AI Translator 1.1.0's Transcribe (gst). A: `gemini-3.7-flash`; B and C: model not recorded | A Medium; B and C not recorded | Whole-second gst output, used as saved | Not recorded | 3 transcripts (770, 547, 913 cues) | Before NG; counted Oct 8 |
+
+**Would a different model change the results?** Not for the thresholds, the refusal rules or the
+choice of detector, which were measured on human-made subtitles and audio. What depends on the model is
+the **shape of a transcript** used as a reference:
+- gst's transcripts have whole-second times, which is one reason the Japanese samples were refused
+  safely (section 8);
+- the zero-length cues counted in section 9.5 come largely from that whole-second grid: a short line
+  rounds to a single instant.
+
+NG's own transcription, a different model, or the dedicated model's 100 ms timings would produce
+different defect counts. The repair budget of 10% was checked only against these three.
 
 ## 1. What the app does today
 
@@ -168,10 +192,10 @@ only (`alignService.ts`; label FE-4).
 
 ---
 
-## 2. What 1.1.0 did
+## 2. What SRT AI Translator 1.1.0 did
 
-1.1.0 shipped **Translate**, **Transcribe** and **Settings** only — **no Align tab**, no retiming command,
-no ALASS integration (**AL-P1** in the 1.1.0 inventory).
+SRT AI Translator 1.1.0 shipped **Translate**, **Transcribe** and **Settings** only — **no Align tab**, no retiming command,
+no ALASS integration (**AL-P1** in the SRT AI Translator 1.1.0 inventory).
 
 Alignment-adjacent behaviour that existed:
 
@@ -181,7 +205,7 @@ Alignment-adjacent behaviour that existed:
   for references (AL-P7, AL-P8).
 - **gst** could align internally for transcription timing; NG owns explicit Align instead.
 
-Nothing in 1.1.0 implemented the A–I contract, CHECK Apply, or the 0.55 production profile.
+Nothing in SRT AI Translator 1.1.0 implemented the A–I contract, CHECK Apply, or the 0.55 production profile.
 
 ---
 
@@ -689,7 +713,7 @@ Machine reason remains `partial_coverage`; UI must not collapse check into accep
 | **Bundle M** | Shipped embedded-track arbitration + diagnostic | 10.2.1, 14.1, 17 |
 | **D16-3** | 50 ms track families, one witness | 10.2.1 |
 | **D16-5** | In-memory candidate + generation fence (Apply id) | 10.2.1 |
-| **AL-P1** | No 1.1.0 Align surface | 2 |
+| **AL-P1** | No SRT AI Translator 1.1.0 Align surface | 2 |
 | **AL-X1–AL-X8** | Parity extensions for Align | 13, 15 |
 | **R13.x** | Registry-13 implementation gates | 14.1, 17 |
 | **§4.1b** | A–I steps A–I | 1.3 |

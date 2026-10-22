@@ -16,7 +16,7 @@ Round 19, whole suite **4084** passed at the Round 19 commit); packaged release 
 rows in the release acceptance checklist (English→Hebrew and one other pair where noted). No sustained live burn of
 daily OpenSubtitles quota beyond those probes and normal maintainer runs.
 
-**How to read this file.** Section 1 is what the code does today. Section 2 is 1.1.0. Section 3 is the
+**How to read this file.** Section 1 is what the code does today. Section 2 is SRT AI Translator 1.1.0. Section 3 is the
 timeline. Sections 4–12 are probes, design reviews, and Round 19 hardening. Section 13 lists decisions.
 Section 14 separates gate proof from live runs. Sections 15–17 are limits, recommendations, and the code map.
 
@@ -25,6 +25,20 @@ experimental Hebrew switches ([`gender-extras.md`](gender-extras.md)), independe
 ([`subtitle-alignment.md`](subtitle-alignment.md)).
 
 ---
+
+## Models used in testing
+
+Finding and downloading a reference subtitle calls **no language model**. The probes, the walk, the
+archive checks and the build checks talk only to TMDB, OpenSubtitles and Wizdom.
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| Wizdom, OpenSubtitles and archive probes (4 to 6); build checks (11) | None | — | Subtitle-site requests only | — | See each section | Sep 9; Oct 16 |
+| Release cases with a translation step: T-24, T-25, T-28, T-29 (12) | `gemini-3.5-flash-lite` | Low | The downloaded or chosen reference fed into a normal translation | Free first, Paid fallback on | 4 cases | Oct 18 |
+
+**Would a different model change the results?** No. Which subtitle is found, how it is checked and how
+many downloads are spent do not depend on the translation model. What the model **does with** the
+reference is covered in [`gender-reference.md`](gender-reference.md).
 
 ## 1. What the app does today
 
@@ -153,11 +167,11 @@ Archives: single owner `subtitleArchive.ts`, envelope **8 MiB** body, **128** en
 
 ---
 
-## 2. What 1.1.0 did
+## 2. What SRT AI Translator 1.1.0 did
 
-1.1.0 had **no** gender reference surface, **no** OpenSubtitles or Wizdom integration, and **no** Subtitle
+SRT AI Translator 1.1.0 had **no** gender reference surface, **no** OpenSubtitles or Wizdom integration, and **no** Subtitle
 Sources settings (maintainer inventory rows **H-P4**, **H-P6**). TMDB existed for cast/context only;
-nothing downloaded a reference subtitle. Everything in section 1 is **NG-new**; no shipped 1.1.0 behaviour
+nothing downloaded a reference subtitle. Everything in section 1 is **NG-new**; no shipped SRT AI Translator 1.1.0 behaviour
 was removed.
 
 ---

@@ -19,7 +19,7 @@ booleans only here), one live translation on a compact Latin-script fixture with
 No SubMaker source was ported into NG.
 
 **How to read this file.** Section 1 summarises where the adopted ideas landed in the product (with
-pointers). Section 2 is the 1.1.0 baseline. Section 3 is the timeline. Section 4 is the full test
+pointers). Section 2 is the SRT AI Translator 1.1.0 baseline. Section 3 is the timeline. Section 4 is the full test
 campaign. Section 5 maps each adoption to a feature record and lists what was rejected. Sections 6–8
 cover build proof, limits and follow-ups. Section 9 is the code map; section 10 is the label index.
 
@@ -38,6 +38,18 @@ Test material is described by type only. No film or series titles and no subtitl
 | Free-first pacing, typed errors, no quota shrink | [`free-tier-protection.md`](free-tier-protection.md) |
 
 ---
+
+## Models used in testing
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| Upstream suite, offline probes, regression reruns, fixture inventory, RTL renders (4.1 to 4.6) | None (offline or stubbed) | — | SubMaker's own code with stubbed network | — | See each section | Sep |
+| Live field test (4.7) | `gemini-2.5-flash-lite`, chosen by the probe from 41 listed models | `thinkingBudget: 0` | Sent through SubMaker's own Gemini service, not NG's | Free (Paid available, unused) | 2 counts and 2 generations; 8 lines | Sep 20 |
+
+**Would a different model change the results?** Mostly not. The findings are about **SubMaker's
+code**: it drops the custom prompt, duplicates source lines in the request, and its process does not
+exit. Those are visible on the wire whatever model answers. The translation quality of the 8 lines was
+not a question here, and it would differ by model.
 
 ## 1. What the app does today
 
@@ -63,9 +75,9 @@ batches, 45 s provider ping) is **not** present in NG.
 
 ---
 
-## 2. What 1.1.0 did
+## 2. What SRT AI Translator 1.1.0 did
 
-1.1.0 never integrated SubMaker. It used gst 3.7.0 for translation, with coarse error handling and no
+SRT AI Translator 1.1.0 never integrated SubMaker. It used gst 3.7.0 for translation, with coarse error handling and no
 language-scored legacy encoding ladder comparable to what the evaluation measured in SubMaker’s
 `encodingDetector` path. OpenSubtitles behaviour in NG was rebuilt for Feature 2; the evaluation
 **informed** quota typing and download guards but did not replace NG’s serial quality-first walk

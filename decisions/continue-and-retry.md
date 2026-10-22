@@ -12,12 +12,28 @@ lines as a source-and-translation pair, as the old engine did.
 test across a restart; live Stop and Continue on one Translate episode and one transcription; a live
 content refusal that produced a retry offer. The retry dialog itself was exercised by checks, not live.
 
-**How to read this file.** Section 1 is what the code does. Section 2 is 1.1.0. Section 3 is the
+**How to read this file.** Section 1 is what the code does. Section 2 is SRT AI Translator 1.1.0. Section 3 is the
 timeline. Sections 4 to 6 are the design decisions with the options considered. Sections 7 to 9 are the
 checks, the live runs and the defects an independent review found. Sections 10 to 13 are the limits,
 recommendations, code map and label index.
 
 ---
+
+## Models used in testing
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| Packaged app, Stop → restart → Continue (8.1) | `gemini-3.5-flash-lite` | Low | Hebrew target, batch 5, context off | Free | 30 synthetic lines, 6 batches | Oct 10 |
+| Translate Stop → Continue (8.2) | `gemini-3.5-flash-lite` | Low | Batch 100, Standard tier | Free | 487 lines | Oct 10 |
+| Transcribe Stop → Continue (8.2) | `gemini-3.7-flash` | Low | 5-minute parts | Free, then Paid after the Free key was overloaded | 28 minutes, 6 parts | Oct 10 |
+| Content refusal → retry offer (8.2) | `gemini-3.5-flash-lite` | Low | Batch 300, context off | Free | 737 lines, 2 requests | Oct 10 |
+| Later builds: restart Continue and UI Continue (8.3) | `gemini-3.5-flash-lite` | Low | Free first, Paid fallback on | Free | 60 lines; 737 lines | Oct 15–16 |
+
+**Would a different model change the results?** Not for what this record decides. The checkpoint format,
+the two-file commit, the prompt-contract barrier, the settings frozen for Continue, and the section retry
+are code, and the build checks prove them without any model. The live runs show the flow working end
+to end on these two models. What a model does mid-run (an overload, a refusal) only decides **where** a
+run stops, not how it resumes.
 
 ## 1. What the app does today
 
@@ -99,7 +115,7 @@ folder; paths named inside a damaged record are never deleted.
 
 ---
 
-## 2. The starting point: what 1.1.0 did
+## 2. The starting point: what SRT AI Translator 1.1.0 did
 
 - gst kept its own machine resume file (`<input>.progress`) beside the input and deleted it on
   success. The app always passed exactly one of `--resume` (with a starting line) or `--no-resume`, so
@@ -129,7 +145,7 @@ folder; paths named inside a damaged record are never deleted.
 
 | Decision | Options considered | Why this one |
 |---|---|---|
-| An app-owned folder per job, outside the 7-day temp sweep | Keep the partial in the temp folder, as 1.1.0 did | A paused job must not vanish after a week |
+| An app-owned folder per job, outside the 7-day temp sweep | Keep the partial in the temp folder, as SRT AI Translator 1.1.0 did | A paused job must not vanish after a week |
 | Fingerprint **every** input, by full hash | Path, size and modification time; a sample of the file | A path or a date can match a different file. A sampled hash can miss an edit. Continuing onto a changed source would silently misalign the output |
 | Freeze every request-affecting setting | Use current Settings on Continue | A file translated half with one model or prompt and half with another is a mixed result nobody asked for |
 | Two-file commit with roll-back or roll-forward | Write the partial, then the pointer | Design check "what is on disk at a random instant": the pointer and the file can disagree after a crash, and the next Continue would skip or repeat lines |
@@ -173,7 +189,7 @@ behaviour; it is not the app's version number.
 | One live job per source+target (Translate) or media+destination (Transcribe) | One per file | Different targets and different destinations are independent; each may stay paused |
 | Start over deletes only files that still match | Delete the folder | A file the user edited or replaced is never destroyed |
 | A paused job has no age limit | Expire after 7 days like temp files | Losing hours of paid work to a timer is worse than a folder on disk |
-| First continued request carries the 50-line pair | Send nothing; send the Cross-Batch Context block | Parity: gst's `resume_context_size` default, which 1.1.0 used. A resumed run has no recent request of its own to orient the model. The pair holds only accepted output, and both turns hold exactly the same line numbers, because a translation turn with something the model did not produce teaches it a wrong answer |
+| First continued request carries the 50-line pair | Send nothing; send the Cross-Batch Context block | Parity: gst's `resume_context_size` default, which SRT AI Translator 1.1.0 used. A resumed run has no recent request of its own to orient the model. The pair holds only accepted output, and both turns hold exactly the same line numbers, because a translation turn with something the model did not produce teaches it a wrong answer |
 
 ---
 
@@ -260,7 +276,7 @@ missed test-timing record and a display-only note.
 | A recorded model missing from a stale model list blocked Continue | A warning instead; fresh starts still use the guard |
 | A transcription fallback saved even when writing its invalidation failed | The record and destination are kept and the run fails |
 | After a failed commit, cleanup could delete the complete translation it had just staged | The staged file is kept under its own name and named in the panel |
-| **Rejected:** Start should be clickable for a model that cannot transcribe, to reach saved work | That greyed state is a 1.1.0 rule, and saved work is reachable by choosing any capable model, after which Continue uses the recorded one |
+| **Rejected:** Start should be clickable for a model that cannot transcribe, to reach saved work | That greyed state is a SRT AI Translator 1.1.0 rule, and saved work is reachable by choosing any capable model, after which Continue uses the recorded one |
 
 ---
 

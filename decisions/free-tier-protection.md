@@ -15,12 +15,36 @@ ON by default and covers Translate and Transcribe.
 manual limits forced a live wait, a live daily stop and live Paid fallback. Only the switch between two
 Quota Groups was never live, because only one real project was available.
 
-**How to read this file.** Section 1 is what the code does. Section 2 is what 1.1.0 did. Section 3 is
+**How to read this file.** Section 1 is what the code does. Section 2 is what SRT AI Translator 1.1.0 did. Section 3 is
 the timeline. Section 4 is the evidence gathered before deciding, section 5 the decisions and the
 alternatives rejected, section 6 the live probe, section 7 the build and acceptance. Sections 8 to 11
 are the limits, recommendations, code map and label index.
 
 ---
+
+## Models used in testing
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| Does `countTokens` spend the request limit? (6.1) | `gemini-3.5-flash-lite` | Generations Low; counts take no thinking setting | Synthetic text, parallel waves of 10, tiny output limit | Free | 40 counts and 40 generations (20 generations before the counts, 20 after) | Oct 15 |
+| Does it spend the input-token limit? (6.2) | `gemini-3.5-flash-lite` | Generations Low | A 400,441-token count payload, 75 s spacing | Free | 8 counts, 3 generations | Oct 15 |
+| How is an over-limit request rejected? (6.4) | `gemini-3.5-flash-lite` | Generations Low | A 1,154,222-token body | Free, plus one Paid generation | 1 count, 2 generations | Oct 15 |
+| Packaged smoke run (7) | Translate `gemini-3.5-flash-lite`; Transcribe `gemini-3.7-flash` | Low, Low | Fresh profile, both keys stored, Free first | Free | 19 checks | Oct 15–16 |
+| Packaged UI acceptance (7) | Translate `gemini-3.5-flash-lite`; Transcribe `gemini-3.7-flash` | Low, Low | Manual limits (2 per minute, then 1 per day), real clicks | Free, with Paid fallback twice | 64 checks | Oct 15–16 |
+| Release test that found the overload behaviour (7) | Transcribe `gemini-3.7-flash` | Low | 71-minute transcription, Allow paid fallback on | Free (overloaded three times; the Paid key sat idle) | One release case | Oct 18 |
+
+The build checks for pacing, quota groups and the scheduler run on a simulated clock and call no model.
+The switch to Paid on overload, added after that release test, is proven by checks only; no real
+overload has yet been answered by the Paid key.
+
+**Would a different model change the results?** The **limits** are Google's, set per project, per
+model and per tier, and they change. That is why the app reads them from Google's own errors rather
+than shipping figures. The `countTokens` findings were measured on **one model, one Free project, at one
+time of day**; another model or project may be charged differently. Whether an over-limit request comes
+back with a structured "too large" field was also checked only on this model on this date. How often a
+model is overloaded is provider behaviour and changes from day to day. The **routing** is code and does
+not depend on the model: Free first, Paid only with consent, a switch on overload, and no shrinking for
+rate pressure.
 
 ## 1. What the app does today
 
@@ -107,7 +131,7 @@ audio chunks either.
 
 ---
 
-## 2. The starting point: what 1.1.0 did
+## 2. The starting point: what SRT AI Translator 1.1.0 did
 
 From gst 3.7.0's source:
 
@@ -158,7 +182,7 @@ From gst 3.7.0's source:
 | Rejected | Why |
 |---|---|
 | Hardcode "published" free limits | Google no longer publishes the table; stale third-party numbers are worse than an honest "unknown" |
-| One fixed delay between batches (1.1.0's approach) | It waits too long after a small batch and not long enough after a large one, and ignores rolling use, retries and re-cut batches |
+| One fixed delay between batches (SRT AI Translator 1.1.0's approach) | It waits too long after a small batch and not long enough after a large one, and ignores rolling use, retries and re-cut batches |
 | One quota pool per key | Keys in the same project share capacity, so per-key pools would over-send |
 | Automatic Free-to-Paid fallback | It can create unexpected cost |
 | Shrink batches to cope with RPM, TPM, 429 or overload | Section 5.2 |
@@ -298,7 +322,7 @@ input limit, at most `1 + ceil(log2(lines))` per batch; Google's structured dail
   by a fix, which was also fixed.
 - **Overload to Paid (October 18).** In the release test, a Free key that kept answering "The model is
   overloaded" was paused 60 seconds and asked again, three times, while a Paid key sat idle. That
-  matched 1.1.0, but the maintainer preferred moving to Paid when he had consented. Allow paid fallback was extended to cover that case (section 1.4). Checks cover five cases:
+  matched SRT AI Translator 1.1.0, but the maintainer preferred moving to Paid when he had consented. Allow paid fallback was extended to cover that case (section 1.4). Checks cover five cases:
   switch on (the request goes to Paid with no wait, and the next request tries Free again); switch
   off (normal pause); no Paid key (normal pause); a Paid key already ranked first (unchanged); and
   consent withdrawn between the overload and the retry (the request waits out the original pause on

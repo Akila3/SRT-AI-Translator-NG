@@ -17,11 +17,33 @@ behaviour from the fork baseline and captured engine notes (not re-run live in t
 multi-hour runs with every toggle combination were not measured here.
 
 **How to read this file.** Section 1 is what the code does today (mechanics also summarised in
-[`ARCHITECTURE.md`](../ARCHITECTURE.md)). Section 2 is 1.1.0 / gst 3.7.0. Section 3 is the timeline,
+[`ARCHITECTURE.md`](../ARCHITECTURE.md)). Section 2 is SRT AI Translator 1.1.0 / gst 3.7.0. Section 3 is the timeline,
 section 4 the tests, section 5 the rules and why. Sections 6 to 10 are build proof, limits,
 recommendations, the code map and the label index.
 
 ---
+
+## Models used in testing
+
+No test in this record called a live model. The build checks and the packaging probe drive the real
+run, file and log code with a **stand-in provider** that returns fixed replies. Model names such as
+`gemini-3.5-flash-lite` and `gemini-3.7-flash` appear only as run settings, so the headers and records
+have something to show.
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| Panel folding and cap, G4 / G4b (4.1) | None (pure functions, no network) | — | Synthetic log streams | — | 5 cases, up to 9,900 input lines and 3,000 distinct lines | Not recorded |
+| Console file fidelity, G9a to G9e (4.2) | None | — | Injected size limits | — | 3 cases (60-line run, one 100 KiB line, sidecar naming) | Not recorded |
+| Settings placement and toggle states, LOG1 (4.3) | None (static reads and settings round-trips) | — | — | — | All 16 combinations of the four switches | Oct 5 (Round 2) |
+| Runner reservation and console on failures, RUN1 (4.4) | Stand-in engines | — | Injected I/O and failures | — | Throw after reserve, busy slot, no key after reserve, redaction | Not recorded |
+| Native Translate reports matrix, LG28 (4.5) | Stand-in provider | — | Six-line fixture, real run and file code | — | 3 outcomes × 16 report settings = 48 runs, plus fault runs | Oct 6 (Rounds 3–4) |
+| Run record, P4-G6 (4.6) | Stand-in provider | — | Native Translate and Transcribe through the shipped runner | — | Completed, failed, stopped, guarded and busy runs | Oct 12 (Round 13) |
+| Packaging probe, `run-consolelog.mjs` (4.7) | Stand-in provider | — | Real run paths; completed, failed, stopped and refused runs | — | Assertion count grows with releases | Each release |
+
+**Would a different model change the results?** No. What is written, when, and how faults are handled
+is the same whichever model answers. The only model-dependent content is what the model returns: for
+example, whether it sends thought summaries for `.thoughts.log`, which is why an empty thoughts file is
+still written when none arrive.
 
 ## 1. What the app does today
 
@@ -127,12 +149,12 @@ the optional diagnostic snapshot from `runArtifacts.ts`.
 
 ---
 
-## 2. What 1.1.0 did (gst 3.7.0 and the Electron shell)
+## 2. What SRT AI Translator 1.1.0 did (gst 3.7.0 and the Electron shell)
 
 At the fork, the desktop app **spawned gst 3.7.0** rather than owning translation calls. Logging parity
 meant preserving what that stack already offered:
 
-| Capability | 1.1.0 behaviour |
+| Capability | SRT AI Translator 1.1.0 behaviour |
 |---|---|
 | Console file | `.console.log` beside the output stem; opened exclusively with stepped names; synchronous line writes; same 8 MiB / 512 KiB / 64 KiB policy (`consoleLog.ts`) |
 | Console content | Masked argv line from gst, then stdout/stderr passed through terminal-noise rules (**REP-26**) before append |
@@ -178,7 +200,7 @@ console contract. JSONL (`.run.jsonl`) is **new** and additive (**DLOG-2** inten
 | Growing-history fixture | 173 raw lines | 12 distinct messages shown | Frame growth capped by **MAX_FRAME** |
 | Head/tail cap | 3,000 distinct lines | Head line 0 and tail line 2999 kept; gap marker counts 1,000 hidden | 200 + 1,800 contract |
 
-**Conclusion:** Panel rules stay as in 1.1.0; they are explicitly **not** the console export path
+**Conclusion:** Panel rules stay as in SRT AI Translator 1.1.0; they are explicitly **not** the console export path
 (`consoleLog.ts` lines 4–9).
 
 ### 4.2 Console file fidelity (G9a / G9d / G9e / G9b / G9c)
@@ -323,7 +345,7 @@ folded array would drop middle content and hide repeats behind counters—exactl
 |---|---|
 | Generic combined "logging" toggle | Four independent user intents (live grid, JSON report, progress diary, thought summaries) |
 | Duplicate Settings controls | Would desynchronise persisted keys |
-| Silent Transcribe progress/thought files | Not 1.1.0 application capability; scope stated in UI tips |
+| Silent Transcribe progress/thought files | Not SRT AI Translator 1.1.0 application capability; scope stated in UI tips |
 | Persisting full provider bodies in JSONL/console | Security and subtitle leakage; structural diagnostics only |
 | Direct truncate-in-place of reports | Superseded by atomic replace for crash safety |
 
@@ -331,7 +353,7 @@ folded array would drop middle content and hide repeats behind counters—exactl
 
 **Rule:** `showTokenStats: true`; all file-writing toggles **false** unless the user enables them.
 
-**Why:** Matches 1.1.0; live token grid is low cost; file sidecars can be large and may contain
+**Why:** Matches SRT AI Translator 1.1.0; live token grid is low cost; file sidecars can be large and may contain
 diagnostic or thought-summary text (tips warn about subtitle text in thoughts).
 
 ---

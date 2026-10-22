@@ -16,12 +16,41 @@ campaign (September 29, section 6.1) reproduced `PROHIBITED_CONTENT` in 2 of 10 
 passage and 0 of 10 non-streamed sends of the same passage. The native engine then met
 `PROHIBITED_CONTENT` live twice, on that same passage.
 
-**How to read this file.** Section 1 is what the code does. Section 2 is the starting point in 1.1.0.
+**How to read this file.** Section 1 is what the code does. Section 2 is the starting point in SRT AI Translator 1.1.0.
 Section 3 is the timeline. Sections 4 to 9 are the tests and design reviews, in order. Section 10 is
 the decision and why, section 11 what the build and live runs showed, and sections 12 to 15 the
 limits, recommendations, code map and label index.
 
 ---
+
+## Models used in testing
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| The whole transcription probe campaign (4) | `gemini-3.7-flash` and `gemini-3.5-transcribe` | Flash: Low (a few arms used gst's default thinking); dedicated: not sent (the model accepts none) | Flash arms: `BLOCK_NONE`, gst's transcription instruction and schema; dedicated arms: its own request shape | Round 1 Free; Rounds 2 to 9 Paid; Round 10 mostly Free | **180 generation calls in total, shared by both models** (not a Flash-only count), plus one model-list request | Sep 10–12 |
+| Round 10: repeats, safety pair, streaming and the dedicated control (4.1, 4.3 to 4.6) | `gemini-3.7-flash` (12 calls) and `gemini-3.5-transcribe` (4 calls) | Flash Low; dedicated not sent | Five identical non-streamed sends; `BLOCK_NONE` vs no safety settings; streaming on vs off | Free for 13 calls, then Paid for 3 after three 503 replies on Free | 16 calls | Sep 12 |
+| Streaming on the refused stretch, within Round 10 (4.6) | `gemini-3.7-flash` | Low | 2 streamed attempts against the 5 non-streamed sends above | First streamed attempt Free, second Paid; non-streamed sends Free | 7 attempts | Sep 12 |
+| Controlled translation campaign (6.1) | `gemini-3.5-flash-lite` | Low | Streaming on and off, 300-line and smaller batches | Free | 78 sends | Sep 29 |
+| Native vs gst unreadable-reply comparison (9) | `gemini-3.5-flash-lite` | Low | The app's defaults, batch 100 | Free | 34 runs | Oct 6 |
+| First live `PROHIBITED_CONTENT` (11.2) | `gemini-3.5-flash-lite` | Low | Batch 300, context off | Free | 2 requests | Oct 10 |
+| The recovery tree, live (11.3) | `gemini-3.5-flash-lite` | Low | Batch 300 | Free | 6 requests | Oct 16 |
+| Transcription split, live (11.4) | `gemini-3.7-flash` | Low | 5-minute parts | Paid | 18 requests | Oct 16 |
+| Dedicated-model control (11.4) | `gemini-3.5-transcribe` | Not sent | Four full runs | Paid | 4 runs, no refusal | Oct 16 |
+
+The model SRT AI Translator 1.1.0 was using when the maintainer first saw a translation blocked is not
+recorded.
+
+**Would a different model change the results?** Yes, for everything about **what is refused and
+how**. Refusal rates and their shape are model behaviour:
+- `gemini-3.7-flash` returned `promptFeedback.blockReason` with no candidates;
+- the dedicated transcription model could instead return `STOP` with partial text;
+- the streaming-related `PROHIBITED_CONTENT` result in section 6.1 was seen on `gemini-3.5-flash-lite`
+  only.
+
+Another model, or a later version of the same one, may refuse more, less, or differently. The **ladder
+itself** is code and does not change with the model: resend an unreadable reply, split on missing lines,
+keep a line still refused at one line, and never accept a placeholder. Which first step suits each block
+reason was measured on these models; it is the part to re-check if a new model refuses in a new way.
 
 ## 1. What the app does today
 
@@ -86,7 +115,7 @@ is halved at once; other refusals get one unchanged retry first.
 
 ---
 
-## 2. The starting point: what 1.1.0 did
+## 2. The starting point: what SRT AI Translator 1.1.0 did
 
 - **gst stopped the whole run on any content block.** It raised an interrupt on itself, saved the
   partial file and exited. Nothing was retried and nothing was split.
@@ -98,8 +127,8 @@ is halved at once; other refusals get one unchanged retry first.
   section 2), and it repaired broken JSON with a library rather than refusing it.
 - **gst resent a bad reply unchanged** after 5 seconds, up to three errors in a row. This is the
   behaviour NG kept for unreadable replies.
-- A recovery feature for refusals had been planned for 1.1.0 and parked, because the engine hid the
-  signal it needed. One of the maintainer's 1.1.0 test notes already said the same refusal also
+- A recovery feature for refusals had been planned for SRT AI Translator 1.1.0 and parked, because the engine hid the
+  signal it needed. One of the maintainer's SRT AI Translator 1.1.0 test notes already said the same refusal also
   appears on the transcription path, and that "any fix should cover both paths rather than one".
 
 ---
@@ -108,12 +137,12 @@ is halved at once; other refusals get one unchanged retry first.
 
 | When (2026) | What | Outcome |
 |---|---|---|
-| Sep 10–12 | Transcription probing (about 180 live calls in ten rounds), for a different feature | Captured real refusals, their exact response shape, and how they behave on retry, on split and with safety settings |
+| Sep 10–12 | Transcription probing (180 live generation calls in ten rounds), for a different feature | Captured real refusals, their exact response shape, and how they behave on retry, on split and with safety settings |
 | Sep 11 | Recovery design reviewed against an open-source research pipeline the maintainer suggested | Its split-on-missing-lines idea adopted; its "skip the line" rule rejected |
 | Sep 12 | Maintainer widens scope | Both paths (translate and transcribe), both reasons (`OTHER` and `PROHIBITED_CONTENT`) |
 | Sep 12 | Streaming question put to the maintainer | Keep no-streaming; rely on retry and split |
 | Sep 12–13 | Five design-review rounds on what a kept line may put in the next request | Kept lines are never context, for any reason |
-| Sep 29 | Controlled translation campaign on the episode where 1.1.0 had been blocked (section 6.1) | `PROHIBITED_CONTENT` reproduced 2 of 10 when streamed, 0 of 10 when not; an earlier "not reproduced" result superseded |
+| Sep 29 | Controlled translation campaign on the episode where SRT AI Translator 1.1.0 had been blocked (section 6.1) | `PROHIBITED_CONTENT` reproduced 2 of 10 when streamed, 0 of 10 when not; an earlier "not reproduced" result superseded |
 | Oct 6 | Native engine compared with the old engine on 11 episodes | 4 bad replies in 34 runs; the native engine stopped on its one, the old engine recovered its three with a resend |
 | Oct 10 | Resend built; first live `PROHIBITED_CONTENT` on the native engine | One resend for bad replies; the block was not resent and the section was offered for retry |
 | Oct 15 | Ladder details set | A first missing-lines reply gets one resend before any split |
@@ -190,7 +219,7 @@ arrived** in the second-to-last chunk and invalidated them:
 | 2 | 86 | chunk 85 | 43 | 75.0% |
 
 The same stretch without streaming returned no candidates and no text, five times. This matched an
-observation from the maintainer's 1.1.0 runs.
+observation from the maintainer's SRT AI Translator 1.1.0 runs.
 
 ---
 
@@ -224,19 +253,19 @@ covered both, because the trigger never reads the reason. What remained was what
 
 **The honest gap at the time:** every refusal NG had measured was `OTHER`. The `PROHIBITED_CONTENT`
 column rested on the documented nature of that block and on what the maintainer had read in the API
-console during a 1.1.0 run. It was a strategy chosen from a documented property, not from a
+console during a SRT AI Translator 1.1.0 run. It was a strategy chosen from a documented property, not from a
 measurement. Section 6.1 and section 11 record what was measured later.
 
 ### 6.1 Later measurement: a controlled translation campaign (September 29)
 
-**Why.** The maintainer had seen `PROHIBITED_CONTENT` in a 1.1.0 run on an English TV episode
+**Why.** The maintainer had seen `PROHIBITED_CONTENT` in a SRT AI Translator 1.1.0 run on an English TV episode
 (737 lines), at Batch Size 300, on lines 301–600. Before the context study (see
 [`cross-batch-context.md`](cross-batch-context.md)) ran on similar material, the question was whether
 that block could be reproduced, and under which conditions.
 
 **Setup.** Gemini 3.5 Flash-Lite at Low thinking, free key, safety at `BLOCK_NONE`, the study's own
-request shape (not 1.1.0's prompt; the model 1.1.0 used that day was not recorded). Two episodes of
-the same series (series A), the 737-line episode being the one 1.1.0 had been blocked on.
+request shape (not SRT AI Translator 1.1.0's prompt; the model SRT AI Translator 1.1.0 used that day was not recorded). Two episodes of
+the same series (series A), the 737-line episode being the one SRT AI Translator 1.1.0 had been blocked on.
 
 | Run | What was sent | Sends | Blocked |
 |---|---|---|---|
@@ -271,7 +300,7 @@ Both blocks were **response-side**: `finishReason: PROHIBITED_CONTENT` with part
   them count or index failures), against 22 of 32 at 100 lines.
 
 **Conclusion.** `PROHIBITED_CONTENT` is real on this passage, intermittent, and in this sample seen only
-when streaming. 1.1.0 streams by default, which fits the maintainer's original sighting. NG does not
+when streaming. SRT AI Translator 1.1.0 streams by default, which fits the maintainer's original sighting. NG does not
 stream (section 7), so the block should be rarer, but not impossible: section 11 records the native
 engine meeting it twice on the same passage without streaming. Splitting at once, rather than
 resending, is consistent with all of this.
@@ -280,16 +309,16 @@ resending, is consistent with all of this.
 
 ## 7. Design: should streaming come back to save the partial lines (September 12)
 
-Section 4.6 showed that the no-streaming rule (a reduction from 1.1.0 the maintainer had already
+Section 4.6 showed that the no-streaming rule (a reduction from SRT AI Translator 1.1.0 the maintainer had already
 accepted) could throw away up to 75% of a stretch the model had already produced. That had never been
 weighed: the original decision weighed honest reporting, not salvage.
 
 It was put to the maintainer with a recommendation to **keep** no-streaming, for four reasons:
 
-1. In 1.1.0, streaming was exactly where a refusal got disguised as a count mismatch.
+1. In SRT AI Translator 1.1.0, streaming was exactly where a refusal got disguised as a count mismatch.
 2. Streaming brings back that control-flow hazard.
 3. 43 partial lines are worth less than the 37 **complete** ones a single retry produced.
-4. The maintainer's own workaround for a blocked translation in 1.1.0 was to turn streaming off.
+4. The maintainer's own workaround for a blocked translation in SRT AI Translator 1.1.0 was to turn streaming off.
 
 **Decision: keep no-streaming; retry once, then split.** The record sets a trigger to reopen it: if
 real runs ever keep materially more lines than the ~20% rate the decision was taken on, the question
@@ -335,7 +364,7 @@ often that mattered:
   `got 79.` once). One resend fixed each.
 - The native engine met **1** bad reply in 12 runs (lines returned twice) and stopped, keeping the
   partial.
-- **4 bad replies in 34 runs:** about one run in eight would have stopped where 1.1.0 finished.
+- **4 bad replies in 34 runs:** about one run in eight would have stopped where SRT AI Translator 1.1.0 finished.
 
 The maintainer had the resend built before the old engine was removed. It follows gst exactly:
 resend unchanged after 5 seconds, one shared count of errors in a row (transport errors included),
@@ -464,9 +493,9 @@ A 71-minute Hebrew recording, 15 parts of 5 minutes, paid key:
 
 | Label | Meaning | Section |
 |---|---|---|
-| `FP-9` | The parked 1.1.0 recovery feature this replaces | 2 |
+| `FP-9` | The parked SRT AI Translator 1.1.0 recovery feature this replaces | 2 |
 | `D1` | Resend an unusable reply unchanged, gst's way, on one error count | 9, 10 |
-| `D4` | No in-batch streaming (a sanctioned reduction from 1.1.0) | 7 |
+| `D4` | No in-batch streaming (a sanctioned reduction from SRT AI Translator 1.1.0) | 7 |
 | `D6-1` | The trigger is missing lines, not a block signal | 5 |
 | `D6-2` | Context recomputed for each half | 5 |
 | `D6-3` | One line, `ceil(log2 B)` depth, `2B` requests | 5 |

@@ -20,7 +20,7 @@ checks, a six-title finishing matrix with hand judgment); release acceptance on 
 Spanish-reference runs. Most matrix work used Stage-1 output
 **without** the oracle in the prompt, so it stress-tests repair more than end-to-end prompt compliance.
 
-**How to read this file.** Section 1 is what the code does today. Section 2 is 1.1.0. Section 3 is the
+**How to read this file.** Section 1 is what the code does today. Section 2 is SRT AI Translator 1.1.0. Section 3 is the
 timeline. Sections 4–11 are tests and analysis in order. Section 12 holds the decisions. Section 13 is
 build checks versus live runs. Sections 14–16 are limits, recommendations, the code map and label index.
 
@@ -31,6 +31,27 @@ Related records: download mechanics and caps
 [`cross-batch-context.md`](cross-batch-context.md).
 
 ---
+
+## Models used in testing
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| Earlier research harness, "46% → 69%" (4) | Translations from `gemini-3.5-flash` (as named in its results file); judged by a Flash model whose exact id was not recorded | Not recorded | A research harness scoring speaker and addressee gender; not NG code | Not recorded | Gap lines from the harness corpus | Before NG |
+| German helper A/B inside the Kodi add-on (8) | `gemini-3.5-flash-lite` | **Medium** | Hard German reference wording | Not recorded | 323 scored triples from a 495-cue packet | Sep 14–15 |
+| Blind semantic review of that A/B (8) | Two model reviewers; model ids not recorded | Not recorded | Blind, scored without the video | — | 60 lines | Sep 15 |
+| UI smoke (9.1) and Speaker A/B on identical bytes (9.2) | `gemini-3.5-flash-lite` | Low | Batch 300; reference off, disk file, automatic, Speaker on | Free, then Paid | One 471-cue episode, 4 cases plus the A/B | Oct 16 |
+| Six-title finishing matrix (9.3) | `gemini-3.5-flash-lite` | Low | First pass without reference, then each finishing layer | Free, then Paid | 10 first-pass jobs plus the layer matrix | Oct 16 |
+| Matrix re-measure after the Round 19A fixes (9.3) | `gemini-3.5-flash-lite` | Low | Same 11 first-pass files | Free, then Paid | 11 files | Oct 17 |
+| Release acceptance (9.4) | `gemini-3.5-flash-lite` | Low | Full translations with the gender layers each case named | Free first, Paid fallback on | 3 cases (T-24, T-28, T-29) | Oct 18 |
+
+**Would a different model change the results?** Yes, for every **quality** result. How well a model
+**follows a gender reference** placed in its prompt, and how accurately it repairs the lines it is
+asked to fix, are model behaviour. All live NG evidence is `gemini-3.5-flash-lite` at Low. The German
+conclusion was measured at **Medium** thinking on the same model, so it does not even transfer to Low
+without re-measuring. A stronger model might use the reference better, or might need it less; neither
+was measured. The repair request's occasional malformed JSON was also seen on this model. The
+**alignment gate, the readers and the guards** (sections 5 to 7) are offline code checked against a
+corpus, and do not depend on the model.
 
 ## 1. What the app does today
 
@@ -142,7 +163,7 @@ wins; metadata-only attempt lines go to the run log (H-log-1). Details:
 
 ---
 
-## 2. What 1.1.0 did
+## 2. What SRT AI Translator 1.1.0 did
 
 - **No second subtitle control** on Translate: no manual gender-reference picker, no automatic download, no
   compare-and-repair pass in the desktop app (documented parity gap H-P6).
@@ -517,7 +538,7 @@ was recorded and passed on re-run; it was not product logic.
 - Prefer **human OpenSubtitles** or known-good disk references over Wizdom for gender.
 - If Speaker or Method B is enabled, read [`gender-extras.md`](gender-extras.md) tooltips and expect extra
   API calls.
-- When comparing to 1.1.0, remember NG **adds** reference + repair; cast and audio gender paths remain.
+- When comparing to SRT AI Translator 1.1.0, remember NG **adds** reference + repair; cast and audio gender paths remain.
 
 ---
 

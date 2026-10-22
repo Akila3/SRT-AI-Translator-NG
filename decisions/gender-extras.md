@@ -14,13 +14,14 @@ because only a handful of correct changes were measured and the false-positive r
 still unknown.
 
 **Status:** current. **Evidence scope:** frozen measurement design (2026-09-14); private research campaigns
-v1 through v5d on up to eleven English→Hebrew workspace titles with Gemini 3.5 Flash-Lite, LOW thinking,
-temperature 0, batched Stage-1 (50 cues) where noted; live packaged-app matrix on six titles (2026-10-16) and
+v1 through v5d on up to eleven English→Hebrew workspace titles (layer calls on Gemini 3.1 Flash-Lite,
+Medium thinking, in v1–v2, then Gemini 3.5 Flash-Lite, LOW thinking, temperature 0, from v3; fresh
+batched Stage-1 of 50 cues in v5d; see "Models used in testing"); live packaged-app matrix on six titles (2026-10-16) and
 re-measure after Round 19A fixes (2026-10-17). Independent video-grounded speaker truth covered 30 disputed
 cues in the September campaign, not the full live matrix. Method B’s 123 accepted research events are
 helper-axis agreement, not independently adjudicated semantic fixes.
 
-**How to read this file.** Section 1 is what the code does today. Section 2 is 1.1.0. Section 3 is the
+**How to read this file.** Section 1 is what the code does today. Section 2 is SRT AI Translator 1.1.0. Section 3 is the
 timeline. Sections 4–12 are the studies in order. Section 13 is the decision set. Section 14 separates gate
 proof from live observation. Sections 15–17 are limits, recommendations, and the code map. Section 18 indexes
 short labels in comments.
@@ -30,6 +31,38 @@ short labels in comments.
 [`subtitle-alignment.md`](subtitle-alignment.md), [`wrong-alphabet-repair.md`](wrong-alphabet-repair.md).
 
 ---
+
+## Models used in testing
+
+Each test has two parts that can differ: the **first-pass translation** the layers were run on, and
+the **layer calls** themselves (classifier and repair requests). The table lists them separately.
+
+| Test (section) | First-pass translation the layers ran on | Layer calls: model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|---|
+| Campaign v1, discarded (5) | An earlier research translation; its generation settings were not captured | `gemini-3.1-flash-lite` | Medium | Temperature 0, top-P 0.95, top-K 64 | Not recorded | 14 reserved calls (12 returned 503) | Sep 14–24 |
+| Campaign v2 (6) | The same earlier research translation, settings not captured | Mostly `gemini-3.1-flash-lite` | Medium | Temperature 0, top-P 0.95, top-K 64; two repeats, no 503 retry | Not recorded | Small slices (5 to 25 cues) on 3 titles | Sep 14–24 |
+| Campaign v3 (7) | The same earlier research translation, settings not captured | `gemini-3.5-flash-lite` | Low | Temperature 0, top-P 0.95, top-K 64, three repeats | Paid | Part of the 81 calls for v3 and v4c | Sep 24 |
+| Campaign v4c (7.1) | **Fresh** first pass of one 471-cue drama episode, `gemini-3.5-flash-lite` Low | `gemini-3.5-flash-lite` | Low | As v3 | Paid | Part of the 81 calls for v3 and v4c | Sep 24 |
+| Method B eleven-title follow-up, v5d (8) | **Fresh** first pass per title, `gemini-3.5-flash-lite` Low, batches of 50 | `gemini-3.5-flash-lite` | Low | Temperature 0; classifier batches of 250; three repeats | Paid | 316 calls, 7,759 cues, 11 titles | Sep 24 |
+| Live matrix, Round 19 (10) | Made by the packaged app, `gemini-3.5-flash-lite` Low, no reference in the prompt | `gemini-3.5-flash-lite` | Low | The app's own layer requests | Free, then Paid | 10 new first-pass files plus one drama | Oct 16 |
+| Re-measure after Round 19A (11) | The same first-pass bytes as Round 19 | `gemini-3.5-flash-lite` | Low | Speaker in its own request | Free, then Paid | 11 first-pass files | Oct 17 |
+| Packaged Speaker A/B (14) | Identical first-pass bytes for both arms | `gemini-3.5-flash-lite` | Low | Speaker off vs on | Free first | One drama, 4 speaker fixes | Oct 16 |
+
+For v1 to v3 the first pass came from an earlier research harness. Its saved files do not include the
+requests that produced them, so the model and settings it was translated with are unknown. That is one
+reason v4c and v5d generated fresh first passes on the measured model.
+
+**Would a different model change the results?** Yes. Every layer here asks a model to judge or rewrite
+gender, so each result is model behaviour:
+- Speaker's identity fixes, and its repeatable wrong-speaker edits;
+- the one stable Spanish C1 fix;
+- Method B's classifier stability (about 78% per axis) and its content blocks.
+
+The layer calls **moved** from `gemini-3.1-flash-lite` at Medium (v1 and v2) to `gemini-3.5-flash-lite`
+at Low (v3 onwards), so v1 and v2 results do not carry over. v3 also ran on a first pass of unknown
+origin; v4c, v5d and the live matrices are the results measured end to end on one model. Single live runs also vary from run to run on
+the same model. The OFF defaults rest on these measurements; a different model would need the
+enablement measurements in section 9 repeated before any default changes.
 
 ## 1. What the app does today
 
@@ -102,9 +135,9 @@ cues correctly in live re-measure, so C1 remains independently usable.
 
 ---
 
-## 2. What 1.1.0 did
+## 2. What SRT AI Translator 1.1.0 did
 
-1.1.0 had no gender reference at all: gender reached the prompt only through TMDB cast genders in the
+SRT AI Translator 1.1.0 had no gender reference at all: gender reached the prompt only through TMDB cast genders in the
 description and optional audio. It had no second pass that flags wrong Hebrew morphology, no
 classification of unread lines, and no Speaker, C1 or Method B switches. The Kodi add-on implemented the
 reference hints and the base repair, and NG ported that behaviour (see

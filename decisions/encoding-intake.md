@@ -19,7 +19,7 @@ development-harness translation of a 12-cue Hebrew legacy clip (2026-10-06; not 
 native-engine run), and release acceptance case T-04 (2026-10). Other encodings (CJK, Thai, Vietnamese, Windows-1257) were
 not added because no labelled corpus met the entry bar.
 
-**How to read this file.** Section 1 is what the code does today. Section 2 is the 1.1.0 baseline.
+**How to read this file.** Section 1 is what the code does today. Section 2 is the SRT AI Translator 1.1.0 baseline.
 Sections 3–4 are the measured campaign. Section 5 lists each rule, constant, and rejected alternative.
 Sections 6–8 cover build proof, limits, and follow-ups. Sections 9–10 map files and code-comment labels.
 
@@ -27,6 +27,20 @@ Test material is described by type and code page only; no film titles and no dia
 appear here (see [`README.md`](README.md)).
 
 ---
+
+## Models used in testing
+
+Encoding and language detection call **no model**: they decode and score bytes on the computer.
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| Corpus, decoder comparison, gates (4.1 to 4.4) | None | — | Local decode and scoring | — | 35 files; 196-file control; gate fixtures | Oct 6–7 |
+| Development-harness live translation (6) | `gemini-3.5-flash-lite` | Low | Through the old command-line engine; Auto Detect → Hebrew | Free | 12 lines | Oct 6 |
+| Release case T-04 (6) | `gemini-3.5-flash-lite` (the release tests' configuration) | Low | Packaged app; the case checks intake, not the translation | Free first, Paid fallback on | One case | Oct 18 |
+
+**Would a different model change the results?** No. Every conclusion in this record is about reading
+bytes before any request is sent, so no model choice changes it. The live translation only showed that
+the decoded text and the detected language reached the request correctly.
 
 ## 1. What the app does today
 
@@ -119,11 +133,11 @@ private corpus verifier (see section 4).
 
 ---
 
-## 2. What 1.1.0 did
+## 2. What SRT AI Translator 1.1.0 did
 
 From the shipped gst bridge behaviour captured in parity notes (pre-Bundle A):
 
-| Topic | 1.1.0 behaviour |
+| Topic | SRT AI Translator 1.1.0 behaviour |
 |---|---|
 | UTF-8 BOM / BOM UTF-16 | Normalised to a temp UTF-8 sibling |
 | Valid BOM-less UTF-8 | **Original path passed through** (bytes unchanged) |
@@ -287,12 +301,12 @@ Alphabet-decided languages (Hebrew, Greek, etc.) skip the word-count requirement
 | Closed seven Windows pages only | Each page has ≥5 labelled files and 0/35 corruption; 1252 kept for Western legacy parity with old cp1252 fallback | Blind charset sniffing; open-ended `iconv` pages; Windows-1257 / CJK / Thai without corpus (listed as future expansion only) |
 | Valid UTF-8 never reinterpreted | Prevents mojibake on UTF-8 misread as cp1252 | "Try legacy if UTF-8 scores badly" |
 | Linguistic scoring, not byte-frequency detection | Wrong page produces absurd Latin accent runs and wrong script mix | Third-party `encodingDetector.js` / chardet-style sniffers (explicitly not copied per Bundle A contract) |
-| Refuse undetectable legacy | User override or UTF-8 re-save | 1.1.0 cp1252/Latin-1 guess on any `.srt` |
+| Refuse undetectable legacy | User override or UTF-8 re-save | SRT AI Translator 1.1.0 cp1252/Latin-1 guess on any `.srt` |
 | Refuse BOM-less UTF-16 | Byte order unknown; ASCII UTF-16 passes UTF-8 | Guess LE vs BE |
 | Refuse legacy `.ass` | Style names and tags corrupt if guessed | Guess cp1252 on ASS |
 | A plausible different-language hint scoring ≥ 0.7× a leader that is not alphabet-decided wins, even over a clear margin | Wrong cross-script hint 0/35 on corpus (never within the window) | Hint forcing an implausible decode or overriding an alphabet-decided leader |
 | Uncertain blocks Start | Prevents shipping wrong letters to the model | Silent start; receipt optional |
-| One verified read at Start | Digest closes swap-between-inspect-and-run race | Second read from disk without check; 1.1.0 multiple reads |
+| One verified read at Start | Digest closes swap-between-inspect-and-run race | Second read from disk without check; SRT AI Translator 1.1.0 multiple reads |
 | `TextDecoder` in product | 35/35 identical to iconv probe | Direct `iconv-lite` dependency |
 | BiDi stripped for analysis only | Gender/align see logical text; players keep marks | Strip on export/input file |
 | Real `srcLang` to engine when Auto Detect settles | Model receives `-d` / instruction language, not only "auto" | Keep folding language into description only |

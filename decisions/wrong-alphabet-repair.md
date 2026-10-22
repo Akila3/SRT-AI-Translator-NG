@@ -3,7 +3,7 @@
 **Decision in one paragraph.** Gemini sometimes mixes letters from the wrong script into Hebrew lines
 (Arabic look-alikes inside Hebrew words, occasional Cyrillic or Greek fragments, and less often Thai,
 Chinese, Devanagari, Korean or Telugu glued to Hebrew). Both the native engine and gst produce it
-(section 5), and 1.1.0 never detected it. For a **Hebrew target only**, the app uses two layers that do
+(section 5), and SRT AI Translator 1.1.0 never detected it. For a **Hebrew target only**, the app uses two layers that do
 not overlap: at **Save**, a pure table repair (ported from the Kodi add-on) removes or transliterates
 **Arabic** and short **Cyrillic, Greek or Armenian** runs glued to Hebrew, without touching the engine
 temp; on **every Hebrew run**, before gender finishing, one guarded **model redo** fixes **other**
@@ -15,7 +15,7 @@ unless noted; counts from whole-file scans of 33 comparison outputs (7,760 cues 
 context-campaign audit, add-on parity over 174,439 cues, automated gates, packaged Save smoke, and
 eleven Stage-1 finishing replays with live Gemini for the other-alphabet step.
 
-**How to read this file.** Section 1 is what the code does today. Section 2 is 1.1.0. Section 3 is the
+**How to read this file.** Section 1 is what the code does today. Section 2 is SRT AI Translator 1.1.0. Section 3 is the
 timeline. Sections 4–8 are discovery and tests in order. Section 9 is the decision record. Section 10 is
 build checks and live runs. Sections 11–14 are limits, recommendations, the code map and label index.
 Cross-batch context, the native engine comparison, gender extras and RTL formatting are linked only.
@@ -25,6 +25,26 @@ Test material is described by type or by the short episode labels used in
 No film or series titles and no subtitle text from private copies appear here.
 
 ---
+
+## Models used in testing
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| Context-study audit that found the problem (4) | `gemini-3.5-flash-lite` | Low | Outputs of the cross-batch context campaign | Not recorded | 914 mixed-script lines found by scan | Sep 28 |
+| Research harness runs that hit one-line leaves (4.4) | `gemini-3.5-flash-lite` | Low | Strict script gate, retry and split | Free | First run stopped after 53 requests on one trial | Sep 29 |
+| Eleven-episode scan (5) | `gemini-3.5-flash-lite` | Low | Batch 100; native, gst and gst repeat | Free | 11 episodes × 3 arms = 33 output files; 7,760 lines per arm | Oct 6 |
+| Save repair, live (10.2) | `gemini-3.5-flash-lite` | Low | 40-line translation, then Save | Free | 1 Arabic line fixed | Oct 10–11 |
+| Other-alphabet redo, live re-measure (7.3) | `gemini-3.5-flash-lite` | Low | Redo runs before the gender step | Free, then Paid | 11 first-pass files, 10 qualifying lines | Oct 17 |
+| Release acceptance log (10.2) | `gemini-3.5-flash-lite` | Low | Release-test translations | Free first, Paid fallback on | 69 console logs | Oct 18 |
+
+The add-on parity proof (174,439 lines) and the corpus detection pass call no model.
+
+**Would a different model change the results?** The **slip rate** is model behaviour: 55 to 71 Arabic
+lines per arm in section 5, plus the Cyrillic, CJK and fused-Latin counts. It was measured only on
+`gemini-3.5-flash-lite` at Low translating into Hebrew; another model may slip more, less, or into
+different alphabets. The **table repair** at Save is deterministic code and gives the same result
+whatever produced the text. The **other-alphabet redo** asks the model again, so how well it fixes a
+line depends on the model, as the gender repair does.
 
 ## 1. What the app does today
 
@@ -123,7 +143,7 @@ scripts Round 11 covers.
 
 ---
 
-## 2. The starting point: what 1.1.0 did
+## 2. The starting point: what SRT AI Translator 1.1.0 did
 
 - **No wrong-alphabet repair.** Slipped letters shipped in the saved file.
 - **`scanTranslatedOutput`** (`outputSanity.ts`) warns on length ratio, line count and untranslated runs;
@@ -236,7 +256,7 @@ Hebrew letters).
 Wrong-alphabet slips are a **model property**, not something the native engine introduced: they appear
 on **every** engine and every run measured, at low rates (4 to 71 lines per category, out of 7,760), though
 the per-category counts differ between engines and the sample cannot say whether either engine is
-better. 1.1.0 does not detect them. A Hebrew-target repair is an **enhancement**, not
+better. SRT AI Translator 1.1.0 does not detect them. A Hebrew-target repair is an **enhancement**, not
 a parity requirement.
 
 ---

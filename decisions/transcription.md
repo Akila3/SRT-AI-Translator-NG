@@ -2,11 +2,56 @@
 
 **Decision in one paragraph.** Transcription runs in one of two paths, chosen by the resolved model. A **general** Gemini 2.5 or 3.x model keeps the shipping engine’s JSON schema and instruction (including a language-lock sentence that stops foreign words appearing as Latin transliteration). **`gemini-3.5-transcribe`** uses a separate **Stage A** request: inline audio, `wordTimestamp: true`, and exactly one bare `languageCodes` entry the user confirms in a modal after optional spread sampling detection. Both paths cut the prepared audio into **300-second** parts (same count as gst 3.7.0), measure loudness on that file, and **refuse to ship** answers that are grossly too short, wordless over loud stretches, or mis-timed; they **recover** refusals and coverage failures by halving (30-second floor, four levels, one unchanged retry on a generic refusal first). The dedicated path adds a cache nonce (resend once, then refuse the span), builds cues from 100 ms words (**Stage B**), and may run optional **Stage C** text polishing (default **ON**) with a general text model. Rate and quota pressure **never** shrink audio parts; that rule is shared with translation ([`free-tier-protection.md`](free-tier-protection.md)). Content refusals use the ladder in [`content-block-recovery.md`](content-block-recovery.md). Continue and checkpoint behaviour are in [`continue-and-retry.md`](continue-and-retry.md).
 
-**Status:** current. **Evidence scope:** about **180** live Developer API calls across **ten** probe rounds (September 2026), plus gate receipts (Phase 1 transcription, Bundle I, Step 1.9 **ab19** corpus), one **≥18 k-token** implicit-cache live pair (Round 16), the **three-recording** Stage C campaign (October 2026, section 15.2), coverage calibration on maintainer-accepted transcripts (section 15.1), and packaged-app runs where noted. Most quality comparisons used **Hebrew**, **English**, and **Japanese** material at feature length or multi-minute slices; multilingual code-switching was tested on controlled 60-second bilingual clips, not full films.
+**Status:** current. **Evidence scope:** **180** live Developer API generation calls across **ten** probe rounds in September 2026 (plus one model-list request), gate receipts (Phase 1 transcription, Bundle I, Step 1.9 **ab19** corpus), one **≥18 k-token** implicit-cache live pair (Round 16), the **three-recording** Stage C campaign (October 2026, section 15.2), coverage calibration on maintainer-accepted transcripts (section 15.1), and packaged-app runs where noted. Most quality comparisons used **Hebrew**, **English**, and **Japanese** material at feature length or multi-minute slices; multilingual code-switching was tested on controlled 60-second bilingual clips, not full films.
 
-**How to read this file.** Section 1 is what the code does today. Section 2 is gst 3.7.0 / 1.1.0. Section 3 is the timeline. Sections 4–14 walk the probe campaign in order, including **withdrawn** conclusions and why they were withdrawn. Section 15 is the shipped dedicated workflow (Bundle I), including coverage calibration (15.1), the Stage C measurement campaign (15.2), and the empty-transcript notice (15.3). Section 16 is the **ab19** native-vs-CLI transcription comparison. Section 17 notes **ab29** (translation, not transcribe). Sections 18–23 are decisions, build evidence, limits, recommendations, code map, and labels.
+**How to read this file.** Section 1 is what the code does today. Section 2 is gst 3.7.0 / SRT AI Translator 1.1.0. Section 3 is the timeline. Sections 4–14 walk the probe campaign in order, including **withdrawn** conclusions and why they were withdrawn. Section 15 is the shipped dedicated workflow (Bundle I), including coverage calibration (15.1), the Stage C measurement campaign (15.2), and the empty-transcript notice (15.3). Section 16 is the **ab19** native-vs-CLI transcription comparison. Section 17 notes **ab29** (translation, not transcribe). Sections 18–23 are decisions, build evidence, limits, recommendations, code map, and labels.
 
 ---
+
+## Models used in testing
+
+Two kinds of model appear here. The **dedicated** `gemini-3.5-transcribe` accepts no thinking or
+sampling settings, so none were sent. The **general** models were sent a thinking level.
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| Round 1, request surface (4) | `gemini-3.5-transcribe` | Not sent | Word timestamps, clips of 60 s or less | Free | 16 calls | Sep 10 |
+| Round 2, silent omission (5) | `gemini-3.5-transcribe` | Not sent | 12 to 35 minute windows | Paid (the Free key hit 429; Rounds 2 to 9 used Paid) | 14 calls | Sep 10 |
+| Rounds 3 and 4, boundary, cache, dedicated vs general (6, 7) | `gemini-3.5-transcribe`; Round 4 adds `gemini-3.7-flash` | Not sent / gst's default thinking | Flash arms used gst's instruction, schema and `BLOCK_NONE` | Paid | 18 calls for the two rounds together | Sep 10 |
+| Round 5, cause and `languageCodes` (8) | `gemini-3.7-flash` and `gemini-3.5-transcribe` | Flash Low and Medium arms / not sent | Identical Hebrew audio (3 and 6 minute windows) | Paid | 31 calls | Sep 10–11 |
+| Round 6, provenance, detection and N8 (9) | `gemini-3.7-flash` and `gemini-3.5-transcribe` | Low / not sent | Detection asked as a text question | Paid | 24 calls | Sep 11 |
+| Round 7, where to sample (10) | `gemini-3.7-flash` | Low | Temperature 0, six 10 s samples vs one 60 s clip | Paid | 33 calls (the 12-arm probe ran twice, plus 9) | Sep 11 |
+| Round 8, one language per request (11) | `gemini-3.5-transcribe` and `gemini-3.7-flash` | Not sent / Low | 60 s bilingual clip; Flash with the language-lock clause | Paid | 14 calls | Sep 11 |
+| Round 9, wording and native script (12) | `gemini-3.7-flash` | Low | gst's exact transcription workflow | Paid | 8 calls | Sep 11–12 |
+| Round 10, refusals and retries (13) | `gemini-3.7-flash` and `gemini-3.5-transcribe` | Low / not sent | `BLOCK_NONE`, streaming arms | Free, then Paid | 16 calls | Sep 12 |
+| Implicit cache handler, live (14) | `gemini-3.5-transcribe` | Not sent | Repeats with and without a leading nonce, 12.5-minute Hebrew slice | Paid | Paired repeats | Oct 14 |
+| Stage C polishing campaign (15.2) | `gemini-3.5-flash-lite` and `gemini-3.7-flash` | Low, Low | Batches of 25 to 100, then the guard replay | Free and Paid per file; Flash 3.7 on Paid | 3 whole recordings | Oct 14 |
+| Engine A/B, ab19 (16) | `gemini-3.7-flash` | Low | Sampling withheld on the wire by both engines | Paid | 3 recordings, both engines, one gst repeat | Oct 5–6 |
+
+Call counts for Rounds 1 to 10 come from a recount of the saved responses: **180** generation calls
+in all, including 6 fixture-preparation calls between Rounds 1 and 2 that belong to no round. The one
+`ListModels` request in Round 1 is separate and is not counted in any figure here. Some notes kept
+during the probing had tallied rounds by hand and disagreed with the recount for Rounds 3, 4 and 7;
+the recount is the one used here.
+
+The coverage calibration (15.1) and the preparation progress probe (19.1) call no model.
+
+**Would a different model change the results?** Yes, and this record is the clearest case, because two
+models measured on the same audio behaved differently.
+- **Dedicated model only** (`gemini-3.5-transcribe`): silent omission without `languageCodes` (N6),
+  the cache serving a degraded transcript (N7) and one language per request (N9). A future dedicated
+  model may not share them; the safeguards stay until that is measured.
+- **Both tested models:** invention on near-silent audio (N8). The dedicated model returned an
+  invented greeting in whichever language was pinned, and `gemini-3.7-flash` invented a line of
+  dialogue on the same kind of audio. The refusal rule in section 15.1 is therefore not specific to
+  one model.
+- **General path:** refusal visibility, the multilingual result and the detection results were
+  measured on `gemini-3.7-flash` at Low.
+- **Polishing:** Stage C quality, the batch size of 50 and what the guard refuses were measured only on
+  `gemini-3.5-flash-lite` and `gemini-3.7-flash` at Low. The polishing model defaults to the
+  translation model, which can be one that was never measured.
+- **Model-independent:** the coverage arithmetic, the Stage B layout and the guard's rules are code.
+  How often each one fires depends on the model's output.
 
 ## 1. What the app does today
 
@@ -17,7 +62,7 @@ There is **no separate “Transcribe default model”** stored on the Transcribe
 | Setting | Default / behaviour | Why |
 |---|---|---|
 | Translation model in Settings | **`gemini-3.1-flash-lite`** when nothing else is resolved from the live model list (`store.ts` seed; live refresh may supersede) | Alias-free seed; not proof the model runs until fetched |
-| Transcribe override | **OFF** (`transcribeOverride: false`) | Parity with 1.1.0: one control, two positions (D5-16) |
+| Transcribe override | **OFF** (`transcribeOverride: false`) | Parity with SRT AI Translator 1.1.0: one control, two positions (D5-16) |
 | Which path runs | General if the resolved model is 2.5/3.x **without** a dedicated transcribe id; **dedicated** if the id contains `transcribe` and passes capability checks | The two model families need different request shapes (section 7) |
 | Chunk length | **300 s** (`TRANSCRIBE_CHUNK_SECONDS`, `transcribe.ts:85`) | gst 3.7.0 default (`main.py:94`); last chunk ends at true duration (enhancement) |
 | Dedicated `languageCodes` | **Required** — one bare subtag from the source-language modal | Omitting it caused ~92% loss on measured Hebrew windows (D5-10, N6) |
@@ -52,11 +97,11 @@ Transcription recovery **splits audio at the quietest moment** near the middle o
 
 ---
 
-## 2. What 1.1.0 did (gst 3.7.0 baseline)
+## 2. What SRT AI Translator 1.1.0 did (gst 3.7.0 baseline)
 
 From gst **`main.py:1519–1977`** (cited in `transcribe.ts:1–11`):
 
-| Behaviour | 1.1.0 / gst |
+| Behaviour | SRT AI Translator 1.1.0 / gst |
 |---|---|
 | Chunk size | **300 s** default; app never passed another size |
 | Loop end | **`int(audio_length)`** — fractional last second skipped |
@@ -77,11 +122,11 @@ NG keeps **300 s** chunk **count**, adds **partial flush per chunk**, **coverage
 |---|---|---|
 | Sep 10 | Feature 5 first designed from Google's documentation, then **16** live calls the same day | Five doc claims wrong; dedicated API surface captured |
 | Sep 10 | Round 2: **14** calls, **9** with 12–35 min audio | **N6** silent omission; “30 min doc limit” falsified |
-| Sep 10 | Round 3: **12** calls | “Duration drives loss” **withdrawn**; slice boundary + **N7** cache |
-| Sep 10 | Round 4: **7** calls | Flash vs dedicated head-to-head |
+| Sep 10 | Round 3 (Rounds 3 and 4: **18** calls together) | “Duration drives loss” **withdrawn**; slice boundary + **N7** cache |
+| Sep 10 | Round 4 | Flash vs dedicated head-to-head |
 | Sep 10–11 | Round 5: **31** calls | **`languageCodes`** cause; **`promptFeedback`** on Flash; **D5-8** withdrawn |
 | Sep 11 | Round 6: **24** calls | Fixture label falsified; **N8** fabrication; detection **4/4** |
-| Sep 11 | Round 7: **12** calls | Spread sampling **3/3** vs naive **2/3**; naive **`zxx`** not `"fr"` (E23) |
+| Sep 11 | Round 7: **33** calls (a 12-arm probe run twice, plus 9) | Spread sampling **3/3** vs naive **2/3**; naive **`zxx`** not `"fr"` (E23) |
 | Sep 11 | Round 8: **14** calls | **One language per request** (N9); Flash keeps two on test clip |
 | Sep 11–12 | Round 9: **8** calls | Wording favours Flash; native-script prompt **not** adopted (D5-15) |
 | Sep 12 | Round 10: **16** calls | Refusal retry **1/5**; dedicated no block signal |
@@ -93,9 +138,9 @@ NG keeps **300 s** chunk **count**, adds **partial flush per chunk**, **coverage
 
 ---
 
-## 4. Round 1 — request surface (~16 calls, ≤60 s)
+## 4. Round 1 — request surface (16 calls, ≤60 s)
 
-**Setup.** Free-tier key; **`ListModels`** plus **15** transcribe attempts on short clips; scripts projected few response fields (corrected later in round 5).
+**Setup.** Free-tier key; **16** transcription calls on short clips, plus one separate **`ListModels`** request; scripts projected few response fields (corrected later in round 5).
 
 **Results (selected).**
 
@@ -135,7 +180,7 @@ NG keeps **300 s** chunk **count**, adds **partial flush per chunk**, **coverage
 
 ---
 
-## 6. Round 3 — boundary and cache (12 calls)
+## 6. Round 3 — boundary and cache (18 calls with Round 4)
 
 **Controlled pairs (same recording).**
 
@@ -156,7 +201,7 @@ NG keeps **300 s** chunk **count**, adds **partial flush per chunk**, **coverage
 
 ---
 
-## 7. Round 4 — dedicated vs `gemini-3.7-flash` (7 calls)
+## 7. Round 4 — dedicated vs `gemini-3.7-flash` (18 calls with Round 3)
 
 **Setup.** GST-faithful prompt (**2189** chars), schema, safety; same audio for F1/F2/T arms.
 
@@ -231,7 +276,7 @@ All **`STOP`**, billed **~4.5–5.2 k** tokens / 3 min. **D5-12:** gross disprop
 
 ---
 
-## 10. Round 7 — where to sample (12 calls)
+## 10. Round 7 — where to sample (33 calls)
 
 **Question.** Opening of many films is pre-speech; naive clip misleads detection.
 
@@ -317,7 +362,7 @@ All **`STOP`**, billed **~4.5–5.2 k** tokens / 3 min. **D5-12:** gross disprop
 
 **Relative loudness (why not a fixed dB floor).** Recordings differ widely: across the five calibration files below, the quiet floor (10th percentile) ranged from −79 to −37 dBFS and the loud level (95th percentile) from −23 to −14 dBFS. A fixed threshold therefore mis-classifies quiet speech on one file and music on another; the first rule tried (a fixed gap from the floor, "set A") left 23 wordless loud buckets on the sparse-dialogue control. Pinning the threshold at −60 dBFS fails four build checks. The shipped rule (`loudnessOf` in `coverage.ts`) sets the threshold to the maximum of: 12 dB below the run's 95th percentile, 10 dB above its 10th percentile (clamped so it stays at least 3 dB below the 95th percentile), and −60 dBFS. A bucket is **loud** when at least **20%** of its seconds exceed that threshold (`LOUD_BUCKET_SHARE`).
 
-**Calibration on maintainer-accepted transcripts (counts only, no dialogue quoted).** A research script compared each file's envelope to its accepted 1.1.0 transcript:
+**Calibration on maintainer-accepted transcripts (counts only, no dialogue quoted).** A research script compared each file's envelope to its accepted SRT AI Translator 1.1.0 transcript:
 
 | Material | p10 / p95 (dBFS) | Wordless loud 30 s buckets (fixed floor → **relative rule**) | Notes |
 |---|---|---|---|
@@ -329,7 +374,7 @@ All **`STOP`**, billed **~4.5–5.2 k** tokens / 3 min. **D5-12:** gross disprop
 
 On the real sparse-dialogue control the relative rule cut wordless loud buckets from **23 to 2**. Separately, a **synthetic 720-second build-check fixture** shows why **tail-only** logic is unsafe: it reaches **99.9% tail coverage** while **23 of 24** buckets carry no text, and the checks **fail** it explicitly (CV18 exit fixture 2). The two "23"s are different measurements.
 
-**Gross disproportion (D5-12).** The refusal fires only when **all** of these hold (`grossDisproportion` in `coverage.ts`): the answer has **some** text (an empty answer is dropped audio and goes to the coverage re-ask instead), the unit has at least **60 loud seconds** (`DISPROPORTION_MIN_LOUD_SECONDS`), and the answer has fewer than **0.15** counted letters per loud second (`DISPROPORTION_MAX_LETTERS_PER_LOUD_SECOND`). "Letters" are letters and digits in any script; spaces and punctuation do not count. The threshold sits between two measurements: the thinnest accepted 1.1.0 chunk had **0.70** letters per loud second, and the N8 invention had **14 characters, 11 of them counted letters, over 112 loud seconds**, so **≈ 0.098** counted letters per second (the design note and a code comment quote 14 / 112 ≈ 0.125, which counts every character; either way it falls below 0.15). Units with under 60 loud seconds and longer inventions are **not** refused by this check (section 20); a build check asserts that a long invention over the same noise passes it, so nobody reads more into the refusal than it does.
+**Gross disproportion (D5-12).** The refusal fires only when **all** of these hold (`grossDisproportion` in `coverage.ts`): the answer has **some** text (an empty answer is dropped audio and goes to the coverage re-ask instead), the unit has at least **60 loud seconds** (`DISPROPORTION_MIN_LOUD_SECONDS`), and the answer has fewer than **0.15** counted letters per loud second (`DISPROPORTION_MAX_LETTERS_PER_LOUD_SECOND`). "Letters" are letters and digits in any script; spaces and punctuation do not count. The threshold sits between two measurements: the thinnest accepted SRT AI Translator 1.1.0 chunk had **0.70** letters per loud second, and the N8 invention had **14 characters, 11 of them counted letters, over 112 loud seconds**, so **≈ 0.098** counted letters per second (the design note and a code comment quote 14 / 112 ≈ 0.125, which counts every character; either way it falls below 0.15). Units with under 60 loud seconds and longer inventions are **not** refused by this check (section 20); a build check asserts that a long invention over the same noise passes it, so nobody reads more into the refusal than it does.
 
 **Stage B layout rules (`STAGE_B_RULES` in `cues.ts`).**
 
@@ -441,7 +486,7 @@ A completed run can report a non-zero in-memory cue count while the promoted **`
 
 | Rule | Why | Alternatives rejected |
 |---|---|---|
-| **Both** general and dedicated models | 1.1.0 already transcribes with Flash; Feature 5 **adds** dedicated workflow | “Pick one model family” (a question that was withdrawn once both were measured) |
+| **Both** general and dedicated models | SRT AI Translator 1.1.0 already transcribes with Flash; Feature 5 **adds** dedicated workflow | “Pick one model family” (a question that was withdrawn once both were measured) |
 | **300 s** chunks | gst parity; bounds refusal blast radius; **does not** prevent N6 alone | 30 min doc “limit” (falsified); duration-based safety (withdrawn) |
 | **D5-10** one `languageCodes` | Fixes most dedicated silent loss | Omit field; multi-code list as policy (drops other languages) |
 | **D5-13** spread detection | 3/3 vs 2/3 naive | First-minute only; re-sample on abstain |
@@ -480,7 +525,7 @@ A completed run can report a non-zero in-memory cue count while the promoted **`
 
 ### 19.1 Native preparation progress probe
 
-1.1.0 needed a check that the Python engine's output was not held back by subprocess buffering (a PyInstaller control in `run-buffering`). The native engine has no subprocess to buffer, so when the CLI engine was retired the check was repointed (`scripts/verify/buffering.ts`, check **NF**) at what still matters: **do preparation progress events reach the app as they happen?** The probe builds a synthetic 10-minute fixture with FFmpeg (black video and a 440 Hz tone, so no real media and no cost), runs it through the app's own preparation on the bundled FFmpeg, and uses a stand-in provider that stops the run at its first request, so nothing reaches the network. The measured run: **Preparing** at **10 ms**, **Working** at **9 055 ms**, **10** FFmpeg progress updates spread between **2 595 ms** and **9 055 ms**, then **Stopped** with nothing sent. The check fails if the events arrive bunched together, if either phase is missing, or if more than one request is attempted. It measures progress delivery and stopping, not transcription latency.
+SRT AI Translator 1.1.0 needed a check that the Python engine's output was not held back by subprocess buffering (a PyInstaller control in `run-buffering`). The native engine has no subprocess to buffer, so when the CLI engine was retired the check was repointed (`scripts/verify/buffering.ts`, check **NF**) at what still matters: **do preparation progress events reach the app as they happen?** The probe builds a synthetic 10-minute fixture with FFmpeg (black video and a 440 Hz tone, so no real media and no cost), runs it through the app's own preparation on the bundled FFmpeg, and uses a stand-in provider that stops the run at its first request, so nothing reaches the network. The measured run: **Preparing** at **10 ms**, **Working** at **9 055 ms**, **10** FFmpeg progress updates spread between **2 595 ms** and **9 055 ms**, then **Stopped** with nothing sent. The check fails if the events arrive bunched together, if either phase is missing, or if more than one request is attempted. It measures progress delivery and stopping, not transcription latency.
 
 ---
 

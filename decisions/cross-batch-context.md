@@ -9,7 +9,7 @@ new installs**; an existing NG profile from before the setting existed keeps the
 **Status:** current. **Evidence scope:** English to Hebrew, Gemini 3.5 Flash-Lite at Low thinking,
 one human judge. Other languages and models were not tested.
 
-**How to read this file.** Section 1 says what the code does today. Section 2 is the 1.1.0 starting
+**How to read this file.** Section 1 says what the code does today. Section 2 is the SRT AI Translator 1.1.0 starting
 point. Sections 3 to 9 are the research, in the order it happened, including two answers that were
 reached and then withdrawn; the withdrawn ones are kept because the reasons they failed are the most
 useful part. Section 10 is the final decision, section 11 what building it uncovered, and sections 12
@@ -19,6 +19,38 @@ Test material is described by type only. Titles are not named and no subtitle te
 here (see [`README.md`](README.md)).
 
 ---
+
+## Models used in testing
+
+Every live test in this record ran on **one model and one thinking level**, translating English to
+Hebrew.
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| Round 1 Campaigns A and C (4.3) | `gemini-3.5-flash-lite` | Low | Provider-default temperature | Not recorded | 160 and 260 calls | Sep 22 |
+| Round 1 Campaign B (4.3) | `gemini-3.5-flash-lite` | Low | Temperature 0 | Not recorded | 260 calls | Sep 22 |
+| Round 1 token counts, Campaign E (4.5) | `gemini-3.5-flash-lite` `countTokens` | Not applicable | Counting only, no generation | Not recorded | 300 counts | Sep 22 |
+| Round 2 corrected campaign (5) | `gemini-3.5-flash-lite` | Low | Provider-default temperature, 100-line batches | Free, then Paid | About 2,000 calls (1,447 generations, 552 counts) | Sep 27 |
+| Round 2 strict re-run (5.4) | `gemini-3.5-flash-lite` | Low | 100-line batches, strict script check | Not recorded | 36 trials | Sep 28 |
+| Round 3a boundary labelling (6.1) | Two model reviewers from different vendors; model ids not recorded | Not recorded | Labelling only, no translation calls | — | 15 boundaries | Sep 28–29 |
+| Round 3a harness runs that failed (6.4) | `gemini-3.5-flash-lite` | Low | Research harness, strict check | Free | First run stopped after 53 calls | Sep 29 |
+| Round 3b screen (7) | `gemini-3.5-flash-lite` | Low | Provider-default temperature, 100-line batches, no streaming | Free, then Paid | 1,129 calls | Sep 30 |
+| Content-block probe beside the screen (7, and [`content-block-recovery.md`](content-block-recovery.md) 6.1) | `gemini-3.5-flash-lite` | Low | Streaming on and off at a 300-line batch | Free | 78 sends | Sep 29 |
+| Round 3c confirmation, S5 vs S8 (8) | `gemini-3.5-flash-lite` | Low | Same protocol as Round 3b | Free | 487 calls, 150 trials | Sep 30 |
+| Live tests of the built feature (11) | `gemini-3.5-flash-lite` | Low | The app's own prompt and request, Batch Size 1, 3 and 100 | Paid (one run on Free) | Dozens of runs, including 23 per wording for the index-list question (11.4) | Oct 12–14 |
+
+**Would a different model change the results?** The **quality** findings are model behaviour:
+- how much a model gains from previous lines;
+- whether it carries context lines into its reply;
+- the gender and fluency differences between S5 and S8.
+
+They were measured only on `gemini-3.5-flash-lite` at Low. A stronger model or a higher thinking level
+might use a larger window well, or need less context, so the choice of 5 lines could shift; that was not
+measured. Round 1 showed the ranking was not sensitive to temperature (temperature 0 and the provider
+default gave the same result), but nothing compared models. The **token-cost** and **coverage**
+results (how many tokens each window adds, how much dialogue it spans) depend on the request text,
+not on how the model behaves. The fixes in section 11 (markers, a resend without context, sending the
+count) were found on this model and may matter more or less on another.
 
 ## 1. What the app does today
 
@@ -84,14 +116,14 @@ send with the feature switched off: no heading, no label, no extra sentences.
 - **New profile:** ON, 5. **Existing NG profile that never stored the setting** (written by a build
   from before this feature): it ran with OFF, so migration `M8` writes OFF for it once, preserving its
   behaviour. A stored ON or OFF is left alone. The count is never written by the migration; a missing
-  or invalid count reads as 5. NG keeps its settings in its own folder and does not import a 1.1.0
+  or invalid count reads as 5. NG keeps its settings in its own folder and does not import a SRT AI Translator 1.1.0
   profile, so `M8` concerns NG profiles only.
 - A saved progress record stores the count. A record written before this feature existed continues
   only with Context OFF.
 
 ---
 
-## 2. The starting point: what 1.1.0 did
+## 2. The starting point: what SRT AI Translator 1.1.0 did
 
 - **Default OFF.** The Settings toggle always showed, with copy saying ON sends the whole previous
   batch.
@@ -103,7 +135,7 @@ send with the feature switched off: no heading, no label, no extra sentences.
 - **A separate resume context** (default 50 lines) rebuilt from the saved file when a run resumed.
   That still exists in NG and is not part of this feature.
 
-Two problems with the 1.1.0 shape motivated the work: the cost, and the fact that the model turn was
+Two problems with the SRT AI Translator 1.1.0 shape motivated the work: the cost, and the fact that the model turn was
 whatever the model last said, so one bad reply could be carried into the next request.
 
 ---
@@ -129,8 +161,8 @@ whatever the model last said, so one bad reply could be carried into the next re
 
 | Implementation | Shape | Default count | Notes |
 |---|---|---|---|
-| gst 3.7.0 (shipped in 1.1.0) | Whole previous request + raw model reply | Whole batch | All or nothing |
-| gst 3.8.3 (newer upstream) | Rebuilt source + translation arrays, one bounded `context_size` | Bounded | The desired window shape, but not shipped in 1.1.0 |
+| gst 3.7.0 (shipped in SRT AI Translator 1.1.0) | Whole previous request + raw model reply | Whole batch | All or nothing |
+| gst 3.8.3 (newer upstream) | Rebuilt source + translation arrays, one bounded `context_size` | Bounded | The desired window shape, but not shipped in SRT AI Translator 1.1.0 |
 | A Kodi subtitle add-on | Plain previous **source** lines, numbers and times removed, in a labelled block | 5, hidden setting | Precomputed, so chunks can run in parallel; split children use their own boundary; a top-up of scattered missing lines gets no context |
 | A Stremio subtitle add-on | Up to N previous **source** entries | 8, range 1–10, off by default | Its UI copy still claimed it sent translations; the code no longer did |
 
@@ -215,9 +247,9 @@ Ten beat eight by one or two answers out of 30; eight was exactly 70% under both
 | Paired 8 | 2,385 | +353 |
 | Paired 10 | 2,468 | +436 |
 | Full source-only 100 | 4,047 | +2,015 |
-| Full paired 100 (the 1.1.0 shape) | 6,361 | +4,329 |
+| Full paired 100 (the SRT AI Translator 1.1.0 shape) | 6,361 | +4,329 |
 
-Any bounded window removes over 90% of 1.1.0's repeated context. Between 8 and 10 lines, price is not
+Any bounded window removes over 90% of SRT AI Translator 1.1.0's repeated context. Between 8 and 10 lines, price is not
 a deciding factor.
 
 ### 4.6 How much dialogue a window covers (Campaign D)
@@ -229,13 +261,13 @@ a deciding factor.
 | 10 | 30.5 s | 58.2 s | 38.3% | 21.7% |
 | 100 | 336 s | 582 s | 89.7% | 73.8% |
 
-A silent gap is only a proxy for a scene change, but the trend is the point: the 1.1.0 window almost
+A silent gap is only a proxy for a scene change, but the trend is the point: the SRT AI Translator 1.1.0 window almost
 always reaches back across scenes.
 
 ### 4.7 Round 1 conclusion, and why it was withdrawn
 
 The study recommended **8 paired lines** (source plus accepted translation), range 1–10, with the
-global default left OFF as in 1.1.0. Paired beat source-only in every comparison, and 8 beat 10 on
+global default left OFF as in SRT AI Translator 1.1.0. Paired beat source-only in every comparison, and 8 beat 10 on
 reliability.
 
 **Then a flaw was found in the test input.** In Campaigns B and C the "previous translations" in the
@@ -387,7 +419,7 @@ kept.
 ### 7.1 Matrix
 
 - **Arms:** no context (N0); source-only 5, 6, 7, 8, 9, 10 (S5–S10); source-only 100 (S100); and
-  **P100**, the 1.1.0 shape (the previous request and the model's raw reply as two turns, from a real
+  **P100**, the SRT AI Translator 1.1.0 shape (the previous request and the model's raw reply as two turns, from a real
   predecessor request per boundary).
 - 15 boundaries × 2 repeats = **30 trials per arm, 270 trials**, plus 15 predecessor requests for P100
   and 18 forced-split trials (each arm forced through three levels of splitting on one title, to prove
@@ -454,7 +486,7 @@ Continuation comparisons against no context (wins–losses–ties) and structura
   reference shown was only the best-overlapping fragment. The review display was fixed during
   judging; the automatic score was not, which adds noise equally to every arm.
 - **About P100.** 26 of 30 fully accepted: 2 not run, 2 with one kept line, 0 failed. That rate is in
-  the same range as S6, S7 and S10, so it does **not** show that the 1.1.0 shape is structurally worse.
+  the same range as S6, S7 and S10, so it does **not** show that the SRT AI Translator 1.1.0 shape is structurally worse.
   It was never compared head to head with S5.
 
 ---
@@ -524,14 +556,14 @@ were 3 (with R) against 4 (without); the conclusion did not change.
   common reason the judge preferred a context arm.
 - 5 lines beat 8 in the confirmation (net +5 of 8 decided comparisons).
 - No scene leftovers were observed in any comparison involving 5 lines (screen and confirmation).
-- 5 lines costs about 120 extra prompt tokens on a 100-line batch, against about 4,300 for 1.1.0's ON
+- 5 lines costs about 120 extra prompt tokens on a 100-line batch, against about 4,300 for SRT AI Translator 1.1.0's ON
   setting.
 - Paired history built from the model's own output did not beat source-only once human-written
   history was removed from the test.
 
 **Not supported, or not measured:**
 
-- 5 lines against 1.1.0's ON setting, head to head. P100 was in the screen but never compared
+- 5 lines against SRT AI Translator 1.1.0's ON setting, head to head. P100 was in the screen but never compared
   directly with S5.
 - Any target language other than Hebrew, any model other than Flash-Lite 3.5 at Low thinking, or a
   second judge.
@@ -552,7 +584,7 @@ forward as "history".
 
 ### 10.2 Default ON, and the upgrade rule
 
-The maintainer asked for 5 lines, **ON by default**, which changes a 1.1.0 default. That change was
+The maintainer asked for 5 lines, **ON by default**, which changes a SRT AI Translator 1.1.0 default. That change was
 explicitly sanctioned. At first he chose to switch existing OFF profiles to ON on upgrade; before the
 decision was final he reversed that:
 
@@ -561,9 +593,9 @@ decision was final he reversed that:
 
 The app tells the two apart by whether the settings file existed before the first launch: a new
 install has none. An existing NG profile that never stored the setting ran with OFF (Context was OFF
-by default before this decision, as in 1.1.0), so OFF is written for it once; a stored value is never
-touched (migration `M8`). NG does not read 1.1.0's settings folder, so this rule protects NG profiles
-from earlier builds, not 1.1.0 installations.
+by default before this decision, as in SRT AI Translator 1.1.0), so OFF is written for it once; a stored value is never
+touched (migration `M8`). NG does not read SRT AI Translator 1.1.0's settings folder, so this rule protects NG profiles
+from earlier builds, not SRT AI Translator 1.1.0 installations.
 
 ### 10.3 The Settings copy
 
@@ -701,8 +733,8 @@ recovered by the no-block resend. At Batch Size 1, 14 of 14 requests with a one-
 
 - **Languages and models.** Every quality result is English to Hebrew on Flash-Lite 3.5 at Low.
   Structural results (markers, fallback) were also only tested on that model.
-- **No head-to-head with 1.1.0's ON.** The new default is much cheaper and cannot carry a bad reply
-  forward, but it is not proven to translate better than 1.1.0's ON setting.
+- **No head-to-head with SRT AI Translator 1.1.0's ON.** The new default is much cheaper and cannot carry a bad reply
+  forward, but it is not proven to translate better than SRT AI Translator 1.1.0's ON setting.
 - **The minimum of 4 is now cautious.** It was set before the markers existed; with them, one-line
   blocks were exact in every run tested. Lowering it needs a wider test at Batch Size 100.
 - **Some batches fail at Batch Size 100 regardless of context.** Lines dropped from long batches are
@@ -769,7 +801,7 @@ block), `R15 L.4` (Settings), `R18 G.3` (context inside the recovery tree).
 | `D15-2R` | Why 5, and the help copy | 10.3 |
 | `D15-3R` | Source-only block, exact heading, no model turn | 1.1 |
 | `D15-4R`, `D15-5R` | Eligibility: committed, accepted, non-blank; no backfill; recovery and retries | 1.2, 1.4 |
-| `F15-N1` … `F15-N4`, `F15-P1` … `F15-P6` | Parity notes: NG behaviour and the 1.1.0 behaviour it replaces | 1, 2 |
+| `F15-N1` … `F15-N4`, `F15-P1` … `F15-P6` | Parity notes: NG behaviour and the SRT AI Translator 1.1.0 behaviour it replaces | 1, 2 |
 | `M8` | The upgrade migration | 10.2 |
 | `TD15-1` | Retry pieces build their own window | 11.5 |
 | `TD15-2` | Progress record stores the count | 11.5 |

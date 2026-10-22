@@ -26,6 +26,25 @@ and label index. Wrong-alphabet repair on Hebrew targets is documented separatel
 
 ---
 
+## Models used in testing
+
+Most of this record is about how players render right-to-left text, which no model is involved in.
+
+| Test (section) | Model | Thinking | Other settings | Key | Size | Date |
+|---|---|---|---|---|---|---|
+| Kodi / gst evaluation, method probe, corpus, libass renders (4, 5, 6, 8) | None | — | Offline code on saved text | — | 192 files; 15 fixtures; 60 frames | Sep 19 |
+| Live model output (7) | `gemini-3.7-flash` | Not sent (the model's own default) | Temperature 0, JSON reply, 8 lines into each of 5 right-to-left languages | Free, then Paid | 5 successful calls, 40 lines | Sep 19 |
+| Four-player matrix, live-translated fixtures (9) | `gemini-3.5-flash-lite` | Low | Through the bundled gst engine | Free | 2 translations, Hebrew and Arabic, 8 lines each | Oct 11 |
+| Release R-09: long Hebrew transcription with marks (12.2) | `gemini-3.7-flash` | Low | Smart RTL set in Settings | Free first, Paid fallback on | One 71-minute transcript, 1,264 cues | Oct 18 |
+| Release T-10: non-RTL target (12.2) | `gemini-3.5-flash-lite` | Low | English → French | Free first, Paid fallback on | One case | Oct 18 |
+
+**Would a different model change the results?** Not for the method choice, the per-player behaviour or
+the corpus invariants. Those come from the app's export code and the players, so they hold for any
+model's text. The one model-dependent question is whether a model **inserts its own direction marks**
+or mixed-direction text into its reply. Section 7 shows that `gemini-3.7-flash` produced clean
+right-to-left script in 40 lines. It does not show that every model does, and other translation models
+were not tested for this.
+
 ## 1. What the app does today
 
 ### 1.1 Settings and defaults
@@ -91,7 +110,7 @@ uses `for_delivery=false` canonical bytes).
 
 ---
 
-## 2. The starting point: what 1.1.0 did
+## 2. The starting point: what SRT AI Translator 1.1.0 did
 
 Shipping **gst 3.7.0** (bundled with the previous app) already wrapped **translation and transcription**
 output:
@@ -117,7 +136,7 @@ whole-cue / idempotence issues.
 
 | When (2026) | What | Outcome |
 |---|---|---|
-| Sep 19 | Review Kodi addon **0.2.548** (RTL identical in supplied **0.2.542** / **0.2.543** trees), gst 3.7.0/3.8.3, parity capture | Corrected baseline: 1.1.0 **does** execute gst RTL; Bundle D is a **derivative** redesign, not a new feature from zero |
+| Sep 19 | Review Kodi addon **0.2.548** (RTL identical in supplied **0.2.542** / **0.2.543** trees), gst 3.7.0/3.8.3, parity capture | Corrected baseline: SRT AI Translator 1.1.0 **does** execute gst RTL; Bundle D is a **derivative** redesign, not a new feature from zero |
 | Sep 19 | Synthetic five-method probe (**15** text fixtures) | Hybrid structurally beat exact Kodi base (tag loss) and gst (non-idempotent reapply) |
 | Sep 19 | Real corpus campaign | **192/192** files, **151,115** cues; final Smart RTL **zero** invariant failures |
 | Sep 19 | Live generation probe | **40/40** cues, five RTL targets, `gemini-3.7-flash` |
@@ -315,7 +334,7 @@ the **right**, Latin and numbers ordered correctly, no tofu, styles preserved.
 | Smart RTL PASS on **clean** fixtures A-he, A-ar, B-he | **12 / 12** player×fixture cells (**PASS** everywhere) |
 | Hebrew Compatibility on Hebrew fixtures | **Same bytes as Smart RTL** where both apply (A-he, B-he) |
 | Off on VLC / MPC-HC / Kodi | **FAIL** (predicted): unwrapped lines laid out LTR |
-| Classic RTL on two-line cues | **FAIL** on VLC, MPC-HC, Kodi (predicted **1.1.0**): whole-cue wrapper closes on line 2, so line 2 has no RLE; italic cue fails when wrapper sits outside `<i>` |
+| Classic RTL on two-line cues | **FAIL** on VLC, MPC-HC, Kodi (predicted **SRT AI Translator 1.1.0**): whole-cue wrapper closes on line 2, so line 2 has no RLE; italic cue fails when wrapper sits outside `<i>` |
 | Basic-Player RTL on direction-aware players | **FAIL** (predicted): moved punctuation at wrong edge |
 | Fixture C-he (damaged file) | Smart RTL **FAIL** (predicted **not-a-repair**): formatting does not repair reversed legacy punctuation |
 | Old Subtitle Repair on C-he | Partial logical repair, **FAIL** on VLC/MPC-HC/Kodi (**repair-scope**): repaired lines have no direction controls → LTR layout |
@@ -355,10 +374,10 @@ coverage as a **bonus** that must not be deliberately broken.
 
 | Rule | Why | Alternatives rejected |
 |---|---|---|
-| **RTL subtitle formatting ON** | Preserves what 1.1.0 users already got from gst, but at the correct **derivative** boundary | OFF default would silently change player-facing behaviour for existing Hebrew/Arabic workflows |
+| **RTL subtitle formatting ON** | Preserves what SRT AI Translator 1.1.0 users already got from gst, but at the correct **derivative** boundary | OFF default would silently change player-facing behaviour for existing Hebrew/Arabic workflows |
 | **Smart RTL (`hybrid`) default** | Zero corpus failures; best clean-fixture player matrix; line-aware fix for VLC/MPC-HC/Kodi second-line failures | **Classic RTL** alone leaves multi-line and `<i>` cues wrong on common players; exact **Kodi base** deletes tags on real files |
 | **Hebrew Compatibility second** | Pixel-identical to Smart RTL on measured Hebrew libass cases; fallback if a player disagrees with Smart RTL | Promoting Hebrew-only method would drop Arabic/Persian/Pashto/Urdu coverage |
-| **Classic RTL third** | Explicit **1.1.0-shaped** escape hatch; byte-identical to gst temp on Round 11 fixtures | Not default because whole-cue wrap fails second lines on VLC/MPC-HC/Kodi |
+| **Classic RTL third** | Explicit **SRT AI Translator 1.1.0-shaped** escape hatch; byte-identical to gst temp on Round 11 fixtures | Not default because whole-cue wrap fails second lines on VLC/MPC-HC/Kodi |
 | **Basic-Player RTL fourth** | Only for players that **ignore** direction controls; corpus punctuation deletion | Default would harm normal libass/VLC users |
 | **Old Subtitle Repair fifth** | Repairs **old reversed files**, not new output; no-op on clean model text | Hiding it broke maintainer requirement to expose all active Kodi methods with honest labels |
 
@@ -421,7 +440,7 @@ Round 11 gate run (D.5 boundary): **3489** passed, **0** failed.
 - **Physical modes delete punctuation** on some real cues (corpus counts in section 6.3).
 - **Old Subtitle Repair** does not add direction controls; on LTR-first players its repaired lines still
   read wrong unless combined with a display method (not shipped as a chain today).
-- **Classic RTL** matches 1.1.0 including weaknesses on multi-line and styled cues on VLC/MPC-HC/Kodi.
+- **Classic RTL** matches SRT AI Translator 1.1.0 including weaknesses on multi-line and styled cues on VLC/MPC-HC/Kodi.
 - **Transcribe with a general model** has no confirmed spoken language, so it uses Smart RTL's
   unknown-language arm (line dominance) even when the language is obvious from metadata.
 - When Round 11 was built, Transcribe could still run through the old gst command-line engine, which was
